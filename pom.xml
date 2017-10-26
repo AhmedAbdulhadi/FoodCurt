@@ -4,8 +4,8 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.novent</groupId>
-    <artifactId>restaurant</artifactId>
-    <version>1.1</version>
+    <artifactId>foodc</artifactId>
+    <version>1</version>
     <packaging>war</packaging>
 
     <name>foodcurtordering</name>
@@ -61,6 +61,11 @@
   			  <artifactId>libphonenumber</artifactId>
   			  <version>8.8.0</version>
 		</dependency>
+			<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
 		<!--  -->
 	</dependencies>
 
@@ -109,11 +114,12 @@
                     <version>2.4</version>
                     <configuration>
                         <outputDirectory>webapps</outputDirectory>
-                        <warName>ROOT</warName>
+                        <warName>foodc-1</warName>
                     </configuration>
                 </plugin>
             </plugins>
         </build>
     </profile>
-  </profiles> 
+  </profiles>
+  
 </project>
