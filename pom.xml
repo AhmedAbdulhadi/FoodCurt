@@ -4,8 +4,8 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.novent</groupId>
-    <artifactId>foodc</artifactId>
-    <version>1</version>
+    <artifactId>food_curt</artifactId>
+    <version>1.0</version>
     <packaging>war</packaging>
 
     <name>foodcurtordering</name>
