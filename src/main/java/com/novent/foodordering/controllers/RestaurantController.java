@@ -13,7 +13,7 @@ import com.novent.foodordering.service.RestaurantService;
 import com.novent.foodordering.util.ResponseObject;
 
 @RestController
-@RequestMapping("api/v1/myrestaurant/restaurant")
+@RequestMapping("api/v1/restaurant")
 @CrossOrigin(origins = "*")
 public class RestaurantController {
 

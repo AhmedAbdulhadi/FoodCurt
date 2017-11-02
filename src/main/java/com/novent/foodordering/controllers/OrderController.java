@@ -14,7 +14,7 @@ import com.novent.foodordering.util.Order;
 import com.novent.foodordering.util.ResponseObject;
 
 @RestController
-@RequestMapping("api/v1/myrestaurant/order")
+@RequestMapping("api/v1/order")
 @CrossOrigin(origins = "*")
 public class OrderController {
 	

@@ -13,7 +13,7 @@ import com.novent.foodordering.service.BranchService;
 import com.novent.foodordering.util.ResponseObject;
 
 @RestController
-@RequestMapping("api/v1/myrestaurant/branch")
+@RequestMapping("api/v1/branch")
 @CrossOrigin(origins = "*")
 public class BranchController {
 	

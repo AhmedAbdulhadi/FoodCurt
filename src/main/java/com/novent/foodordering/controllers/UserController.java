@@ -13,7 +13,7 @@ import com.novent.foodordering.service.UserService;
 import com.novent.foodordering.util.ResponseObject;
 
 @RestController
-@RequestMapping("api/v1/myrestaurant/user")
+@RequestMapping("api/v1/user")
 @CrossOrigin(origins = "*")
 public class UserController {
 	
