@@ -1,1 +1,1 @@
-web: java $JAVA_OPTS -cp target/classes:target/food_curt-1.0.war
+web: java $JAVA_OPTS -jar target/dependency/webapp-runner.jar --port $PORT target/*.war
