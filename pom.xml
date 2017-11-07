@@ -88,7 +88,7 @@
 	<build>
 		<defaultGoal>install</defaultGoal>
 		<!-- To define the plugin version in your parent POM -->
-		<pluginManagement>
+	<!-- 	<pluginManagement> -->
 			<plugins>
 				<plugin>
 					<groupId>org.springframework.boot</groupId>
@@ -122,10 +122,12 @@
                 </execution>
             </executions>
         </plugin>
+        <!--
 			</plugins>
-		</pluginManagement>
-		<!-- To use the plugin goals in your POM or parent POM -->
+		 </pluginManagement> -->
+		<!-- To use the plugin goals in your POM or parent POM 
 		<plugins>
+		-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
