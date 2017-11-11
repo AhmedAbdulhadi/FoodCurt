@@ -6,7 +6,7 @@
 	<groupId>com.novent</groupId>
     <artifactId>food_curt</artifactId>
     <version>1.0</version>
-    <packaging>war</packaging>
+    
 
     <name>foodcurtordering</name>
     <description>foodCurt project for Spring Boot</description>
