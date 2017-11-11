@@ -1,1 +1,1 @@
-web: java -jar target/food_curt-1.0.jar
+web: target/food_curt-1.0 -Dhttp.port=${PORT} -DapplyEvolutions.default=true -Ddb.default.driver=org.postgresql.Driver -Ddb.default.url=${DATABASE_URL}
