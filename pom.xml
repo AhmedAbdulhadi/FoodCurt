@@ -66,11 +66,6 @@
   			  <artifactId>libphonenumber</artifactId>
   			  <version>8.8.0</version>
 		</dependency>
-		<dependency>
-    <groupId>com.github.jsimone</groupId>
-    <artifactId>webapp-runner</artifactId>
-    <version>7.0.22.1</version>
-</dependency>
 	</dependencies>
 
 	<build>
