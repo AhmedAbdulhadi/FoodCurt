@@ -1,1 +1,1 @@
-web: java -Dserver.port=$PORT $JAVA_OPTS -jar FoodCurt/target/*.jar
+web: java -Dserver.port=$PORT $JAVA_OPTS -war FoodCurt/target/*.war
