@@ -66,6 +66,13 @@
   			  <artifactId>libphonenumber</artifactId>
   			  <version>8.8.0</version>
 		</dependency>
+		
+		<dependency>
+		    <groupId>org.eclipse.jetty</groupId>
+		    <artifactId>jetty-runner</artifactId>
+		    <version>9.4.6.v20170531</version>
+		    <scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>

@@ -1,1 +1,1 @@
-web: java -jar target/food_curt-1.0.war
+web: java $JAVA_OPTS -jar target/dependency/jetty-runner.jar --port $PORT target/*.war
