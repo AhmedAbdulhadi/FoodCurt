@@ -62,8 +62,13 @@ public class AreaServiceImpl implements AreaService{
 		Administrator administrator = administratorDao.findByAdministratorId(area.getAdministratorId());
 		
 		boolean valid = (areaName == null && administrator != null) ;
-		
-		if(administrator == null){
+		if(area.getAreaName()== null || area.getAreaName().equals("") ){
+			valid = false ;
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_AREANAME_REQUIRED_ERROR);
+		} else if(area.getAdministratorId() == 0 ){
+			valid = false ;
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_ADMINISTRATORID_REQUIRED_ERROR);
+		} else if(administrator == null){
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_ADMINISTRATOR_NUMBER_ERROR);
 		} else if(areaName != null ){
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_AREANAME_ALREADY_EXIST_ERROR);
@@ -84,31 +89,66 @@ public class AreaServiceImpl implements AreaService{
 	@Override
 	public ResponseObject updateArea(long areaId, Area area) {
 		ResponseObject response = null;
+		boolean valid = true;
 		
 		Area areaToUpdate = areaDao.findByAreaId(areaId);
-		Area areaName = areaDao.findByAreaName(area.getAreaName());
 		
 		String Name = area.getAreaName();
 		String address = area.getAddress();
 		double longittude = area.getLongittude();
 		double lattiude = area.getLattiude();
-		
-		boolean valid = (areaName == null && (areaToUpdate != null &&areaToUpdate.isStatus()) ) ||( areaToUpdate.equals(areaName));
+		long administratorId = area.getAdministratorId();
 		
 		if(areaToUpdate == null || !areaToUpdate.isStatus()){
+			valid = false;
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_DELETTING_MESSAGE);
-		} else if(areaName != null && !areaToUpdate.equals(areaName) ){
-			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_AREANAME_ALREADY_EXIST_ERROR);
-		} else if(valid){
-			areaToUpdate.setAreaName(Name);
+		}
+		
+		if (Name != null && !Name.equals("") && valid){
+			Area areaName = areaDao.findByAreaName(area.getAreaName());
+			if(areaName != null && !areaToUpdate.equals(areaName) ){
+				valid = false;
+				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_AREANAME_ALREADY_EXIST_ERROR);
+			} else if (valid){
+				areaToUpdate.setAreaName(Name);
+				areaToUpdate.setUpdatedAt(new Date());
+				areaDao.save(areaToUpdate);
+				response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, areaToUpdate);	
+			}
+		}
+		
+		if (administratorId != 0 && valid ){
+			Administrator administrator = administratorDao.findByAdministratorId(area.getAdministratorId());
+			if(administrator == null){
+				valid = false;
+				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_ADMINISTRATOR_NUMBER_ERROR);
+			} else if (valid){
+			areaToUpdate.setAdministratorId(administratorId);
+			areaToUpdate.setUpdatedAt(new Date());
+			areaDao.save(areaToUpdate);
+			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, areaToUpdate);	
+			}
+		}
+		
+		if(address != null && !address.equals("") && valid ){
 			areaToUpdate.setAddress(address);
-			areaToUpdate.setLongittude(longittude);
+			areaToUpdate.setUpdatedAt(new Date());
+			areaDao.save(areaToUpdate);
+			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, areaToUpdate);
+		}
+		
+		if(longittude != 0 && valid ){
+			areaToUpdate.setLongittude(longittude);;
+			areaToUpdate.setUpdatedAt(new Date());
+			areaDao.save(areaToUpdate);
+			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, areaToUpdate);
+		}
+		
+		if(lattiude != 0 && valid ){
 			areaToUpdate.setLattiude(lattiude);
 			areaToUpdate.setUpdatedAt(new Date());
 			areaDao.save(areaToUpdate);
 			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, areaToUpdate);
-		} else {
-			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_UPDATING_MESSAGE);
 		}
 		return response;
 	}

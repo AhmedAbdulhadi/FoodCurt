@@ -79,10 +79,6 @@ public class RestaurantServiceImpl implements RestaurantService{
 		String userName = restaurant.getUserName();
 		String password = restaurant.getPassword();
 		String email = restaurant.getEmail();
-//		int numberOfBranches = restaurant.getNumberOfBranches();
-//		String rate = restaurant.getRate();
-//		long adminId = restaurant.getAdminId();
-//		String workingHours = restaurant.getWorkingHours();
 		
 		try{
 			phone = pnUtil.parse(phoneNumber,"");
@@ -92,11 +88,22 @@ public class RestaurantServiceImpl implements RestaurantService{
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_ERROR);
 		}
 		
-		if(nameRestaurant != null ){
+
+		if (restaurantName == null || restaurantName.equals("")){
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_RESTAURANTNAME_REQUIRED_ERROR);				
+		} else if (phoneNumber == null || phoneNumber.equals("")){
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_PHONENUMBER_REQUIRED_ERROR);				
+		} else if (userName == null || userName.equals("")){
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_USERNAME_REQUIRED_ERROR);				
+		}  else if (password == null || password.equals("")){
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_PASSWORD_REQUIRED_ERROR);				
+		}  else if (email == null || email.equals("")){
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_EMAIL_ADDRESS_REQUIRED_ERROR);				
+		} else if(nameRestaurant != null ){
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_RESTAURANT_ALREADY_EXIST_ERROR);			
 		} else if(restaurantName.length() < 3 || restaurantName.length() > 15){
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_RESTAURANT_NAME_ERROR);			
-		} else if(!isValidNumber && phoneNumber.substring(0, 2).equals("00")){
+		} else if(phoneNumber != null && phoneNumber != "" && !isValidNumber && phoneNumber.substring(0, 2).equals("00")){
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_PREFIX_FORMAT_ERROR);			
 		} else if (!isJONumber || !isValidNumber){
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_PHONENUMBER_FORMAT_ERROR);
@@ -134,26 +141,9 @@ public class RestaurantServiceImpl implements RestaurantService{
 		PhoneNumber  phone = null;
 		boolean isValidNumber = false;
 		boolean isJONumber = false;
+		boolean valid = true ;
 		
 		Restaurant restaurantToUpdate = restaurantDao.findByRestaurantId(restaurantId);
-		Restaurant phoneNumberRestaurant = restaurantDao.findByPhoneNumber(restaurant.getPhoneNumber());
-		Restaurant userNameRestaurant = restaurantDao.findByUserName(restaurant.getUserName());
-		Restaurant emailRestaurant = restaurantDao.findByEmail(restaurant.getEmail());
-		
-		boolean valid =
-				(phoneNumberRestaurant == null && userNameRestaurant == null && emailRestaurant == null && (restaurantToUpdate != null && restaurantToUpdate.isStatus())) ||
-				(userNameRestaurant == null && phoneNumberRestaurant == null && emailRestaurant == null && (restaurantToUpdate != null && restaurantToUpdate.isStatus())) ||
-				(userNameRestaurant == null && phoneNumberRestaurant == null && emailRestaurant != null && restaurantToUpdate.equals(emailRestaurant))||
-				(userNameRestaurant == null && phoneNumberRestaurant != null && emailRestaurant == null && restaurantToUpdate.equals(phoneNumberRestaurant))||
-				(userNameRestaurant == null && phoneNumberRestaurant != null && emailRestaurant != null && restaurantToUpdate.equals(phoneNumberRestaurant)&& restaurantToUpdate.equals(emailRestaurant))||
-				(userNameRestaurant != null && phoneNumberRestaurant == null && emailRestaurant == null && restaurantToUpdate.equals(userNameRestaurant))||
-				(userNameRestaurant != null && phoneNumberRestaurant == null && emailRestaurant != null && restaurantToUpdate.equals(userNameRestaurant)&& restaurantToUpdate.equals(emailRestaurant))||
-				(userNameRestaurant != null && phoneNumberRestaurant != null && emailRestaurant == null && restaurantToUpdate.equals(userNameRestaurant) && restaurantToUpdate.equals(phoneNumberRestaurant))||
-				(userNameRestaurant != null && phoneNumberRestaurant != null && emailRestaurant != null && restaurantToUpdate.equals(userNameRestaurant)&& restaurantToUpdate.equals(phoneNumberRestaurant)&& restaurantToUpdate.equals(emailRestaurant));
-		
-		PhoneNumberUtil pnUtil = PhoneNumberUtil.getInstance();
-		String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
-		
 		String restaurantName = restaurant.getRestaurantName();
 		String phoneNumber = restaurant.getPhoneNumber();
 		String userName = restaurant.getUserName();
@@ -161,49 +151,132 @@ public class RestaurantServiceImpl implements RestaurantService{
 		String email = restaurant.getEmail();
 		String rate = restaurant.getRate();
 		String workingHours = restaurant.getWorkingHours();
-		
-		try{
-			phone = pnUtil.parse(phoneNumber,"");
-			isValidNumber = pnUtil.isValidNumber(phone);
-		    isJONumber = pnUtil.getRegionCodeForNumber(phone).equals("JO");
-		} catch (Exception e) {
-			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_ERROR);
-		}
+		int numberOfBranches = restaurant.getNumberOfBranches();
+		long adminId = restaurant.getAdminId();
 		
 		if(restaurantToUpdate == null || !restaurantToUpdate.isStatus()){
+			valid = false;
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_DELETTING_MESSAGE);
-		} else if(restaurantName.length() < 3 || restaurantName.length() > 15){
-			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_RESTAURANT_NAME_ERROR);			
-		} else if(!isValidNumber && phoneNumber.substring(0, 2).equals("00")){
-			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_PREFIX_FORMAT_ERROR);			
-		} else if (!isJONumber || !isValidNumber){
-			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_PHONENUMBER_FORMAT_ERROR);
-		} else if(phoneNumberRestaurant != null && !restaurantToUpdate.equals(phoneNumberRestaurant)){
-			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_PHONENUMBER_ALREADY_EXIST_ERROR);
-		} else if(userName.length() > 20 || userName.length() < 6){
-			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_USERNAME_LENGTH_ERROR);
-		} else if(userNameRestaurant != null && !restaurantToUpdate.equals(userNameRestaurant) ){
-			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_USERNAME_ALREADY_EXIST_ERROR);
-		} else if(password.length() < 6 || password.length() > 10){
-			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_PASSWORD_LENGTH_ERROR);
-		} else if (!email.matches(regex)) {
-			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_EMAIL_FORMAT_ERROR);
-		} else if(emailRestaurant != null && !restaurantToUpdate.equals(emailRestaurant)){
-			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_EMAIL_ALREADY_EXIST_ERROR);
-		} else if(valid){
-			restaurantToUpdate.setRestaurantName(restaurantName);
-			restaurantToUpdate.setPhoneNumber(phoneNumber);
-			restaurantToUpdate.setUserName(userName);
-			restaurantToUpdate.setPassword(password);
-			restaurantToUpdate.setEmail(email);
+		}
+		
+		if (restaurantName != null && !restaurantName.equals("") && valid ){
+			if(restaurantName.length() < 3 ){
+				valid = false;
+				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_RESTAURANT_NAME_GREATER_ERROR);			
+			} else if (restaurantName.length() > 15){
+				valid = false;
+				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_RESTAURANT_NAME_LESS_ERROR);			
+			} else if (valid){
+				restaurantToUpdate.setRestaurantName(restaurantName);;
+				restaurantToUpdate.setUpdatedAt(new Date());
+				restaurantDao.save(restaurantToUpdate);
+				response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, restaurantToUpdate);
+				}		
+			}
+		
+		
+		PhoneNumberUtil pnUtil = PhoneNumberUtil.getInstance();
+		if (phoneNumber != null && !phoneNumber.equals("") && valid ){
+			Restaurant phoneNumberRestaurant = restaurantDao.findByPhoneNumber(restaurant.getPhoneNumber());
+			try{
+				phone = pnUtil.parse(phoneNumber,"");
+				isValidNumber = pnUtil.isValidNumber(phone);
+			    isJONumber = pnUtil.getRegionCodeForNumber(phone).equals("JO");
+			} catch (Exception e) {
+				valid = false;
+				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_ERROR);
+			}
+			if(phoneNumberRestaurant != null && !restaurantToUpdate.equals(phoneNumberRestaurant)){
+				valid = false;
+				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_PHONENUMBER_ALREADY_EXIST_ERROR);
+			} else if (!isValidNumber && phoneNumber.substring(0, 2).equals("00")){
+				valid = false;
+				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_PREFIX_FORMAT_ERROR);			
+			} else if (!isJONumber || !isValidNumber){
+				valid = false;
+				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_PHONENUMBER_FORMAT_ERROR);
+			} else if(valid){
+				restaurantToUpdate.setPhoneNumber(phoneNumber);
+				restaurantToUpdate.setUpdatedAt(new Date());
+				restaurantDao.save(restaurantToUpdate);
+				response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, restaurantToUpdate);
+			}	
+		}
+		
+		if(userName != null && ! userName.equals("") && valid ){
+			Restaurant userNameRestaurant = restaurantDao.findByUserName(restaurant.getUserName());
+			if(userName.length() > 20 ){
+				valid = false;
+				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_USERNAME_LENGTH_LESS_ERROR);
+			} else if ( userName.length() < 6){
+				valid = false;
+				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_USERNAME_LENGTH_GREATER_ERROR);
+			} else if(userNameRestaurant != null && !restaurantToUpdate.equals(userNameRestaurant) ){
+				valid = false;
+				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_USERNAME_ALREADY_EXIST_ERROR);
+			} else if (valid){
+				restaurantToUpdate.setUserName(userName);
+				restaurantToUpdate.setUpdatedAt(new Date());
+				restaurantDao.save(restaurantToUpdate);
+				response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, restaurantToUpdate);
+			}	
+			
+		}
+		
+		if (password != null && !password.equals("") && valid){
+			if(password.length() < 6 ){
+				valid = false;
+				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_PASSWORD_LENGTH_GREATER_ERROR);
+			} else if (password.length() > 10){
+				valid = false;
+				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_PASSWORD_LENGTH_LESS_ERROR);
+			} else if(valid){
+				restaurantToUpdate.setPassword(password);
+				restaurantToUpdate.setUpdatedAt(new Date());
+				restaurantDao.save(restaurantToUpdate);
+				response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, restaurantToUpdate);	
+			} 
+			
+		}
+		
+		if (email != null && !email.equals("") && valid ){
+			Restaurant emailRestaurant = restaurantDao.findByEmail(restaurant.getEmail());
+			String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
+			if (!email.matches(regex)) {
+				valid = false;
+				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_EMAIL_FORMAT_ERROR);
+			} else if(emailRestaurant != null && !restaurantToUpdate.equals(emailRestaurant)){
+				valid = false;
+				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_EMAIL_ALREADY_EXIST_ERROR);
+			} else if(valid){
+				restaurantToUpdate.setEmail(email);
+				restaurantToUpdate.setUpdatedAt(new Date());
+				restaurantDao.save(restaurantToUpdate);
+				response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, restaurantToUpdate);	
+			}
+		}
+		
+		if(numberOfBranches != 0 && valid ){
+			restaurantToUpdate.setNumberOfBranches(numberOfBranches);
+			restaurantToUpdate.setUpdatedAt(new Date());
+			restaurantDao.save(restaurantToUpdate);
+			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, restaurantToUpdate);	
+		}
+		
+		if (rate != null && !rate.equals("") && valid ){
 			restaurantToUpdate.setRate(rate);
+			restaurantToUpdate.setUpdatedAt(new Date());
+			restaurantDao.save(restaurantToUpdate);
+			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, restaurantToUpdate);	
+		}
+		
+		if(workingHours != null && !workingHours.equals("") && valid){
 			restaurantToUpdate.setWorkingHours(workingHours);
 			restaurantToUpdate.setUpdatedAt(new Date());
 			restaurantDao.save(restaurantToUpdate);
-			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, restaurantToUpdate);
-		} else {
-			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_UPDATING_MESSAGE);
+			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, restaurantToUpdate);	
 		}
+		
 		return response;
 	}
 

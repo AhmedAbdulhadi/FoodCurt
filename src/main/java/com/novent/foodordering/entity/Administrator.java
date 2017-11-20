@@ -37,7 +37,7 @@ private static final long serialVersionUID = 1L;
 	private String password;
 	@NotNull
 	@Column(unique=true)
-	@Email(message = "Enter valide Email Address")
+	@Email(message = "Enter valid Email Address")
 	private String email;
 	public enum Privilege {
 		SUPER,EDITOR, MODERATOR 

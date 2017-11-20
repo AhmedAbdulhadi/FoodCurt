@@ -74,6 +74,7 @@ public class AdministratorServiceImpl implements AdministratorService{
 		String fullName = administrator.getFullName();
 		String password = administrator.getPassword();
 		String email = administrator.getEmail();
+		Privilege privilege = administrator.getPrivilege();
 		
 		try{
 			phone = pnUtil.parse(phoneNumber,"");
@@ -83,7 +84,19 @@ public class AdministratorServiceImpl implements AdministratorService{
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_ERROR);
 		}
 		
-		if(!isValidNumber && phoneNumber.substring(0, 2).equals("00")){
+		if (phoneNumber == null || phoneNumber.equals("")){
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_PHONENUMBER_REQUIRED_ERROR);				
+		} else if (userName == null || userName.equals("")){
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_USERNAME_REQUIRED_ERROR);				
+		}  else if (fullName == null || fullName.equals("")){
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_FULLNAME_REQUIRED_ERROR);				
+		}  else if (password == null || password.equals("")){
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_PASSWORD_REQUIRED_ERROR);				
+		}  else if (email == null || email.equals("")){
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_EMAIL_ADDRESS_REQUIRED_ERROR);				
+		}  else if (privilege == null || privilege.equals("")){
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_PRIVILAGE_REQUIRED_ERROR);				
+		} else if(phoneNumber != null && phoneNumber != "" && !isValidNumber && phoneNumber.substring(0, 2).equals("00")){
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_PREFIX_FORMAT_ERROR);			
 		} else if (!isJONumber || !isValidNumber){
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_PHONENUMBER_FORMAT_ERROR);
@@ -117,25 +130,9 @@ public class AdministratorServiceImpl implements AdministratorService{
 		PhoneNumber  phone = null;
 		boolean isValidNumber = false;
 		boolean isJONumber = false;
+		boolean valid = true;
 		
-		Administrator adminToUpdate = administratorDao.findByAdministratorId(administratorId);
-		Administrator phoneNumberAdmin = administratorDao.findByPhoneNumber(administrator.getPhoneNumber());
-		Administrator userNameAdmin = administratorDao.findByUserName(administrator.getUserName());
-		Administrator emailAdmin = administratorDao.findByEmail(administrator.getEmail());
-		
-		boolean valid =
-		        (userNameAdmin == null && phoneNumberAdmin == null && emailAdmin == null && administrator != null && (adminToUpdate != null && adminToUpdate.isStatus())) ||
-				(userNameAdmin == null && phoneNumberAdmin == null && emailAdmin != null && adminToUpdate.equals(emailAdmin))||
-				(userNameAdmin == null && phoneNumberAdmin != null && emailAdmin == null && adminToUpdate.equals(phoneNumberAdmin))||
-				(userNameAdmin == null && phoneNumberAdmin != null && emailAdmin != null && adminToUpdate.equals(phoneNumberAdmin)&& adminToUpdate.equals(emailAdmin))||
-				(userNameAdmin != null && phoneNumberAdmin == null && emailAdmin == null && adminToUpdate.equals(userNameAdmin))||
-				(userNameAdmin != null && phoneNumberAdmin == null && emailAdmin != null && adminToUpdate.equals(userNameAdmin)&& adminToUpdate.equals(emailAdmin))||
-				(userNameAdmin != null && phoneNumberAdmin != null && emailAdmin == null && adminToUpdate.equals(userNameAdmin) && adminToUpdate.equals(phoneNumberAdmin))||
-				(userNameAdmin != null && phoneNumberAdmin != null && emailAdmin != null && adminToUpdate.equals(userNameAdmin)&& adminToUpdate.equals(phoneNumberAdmin)&& adminToUpdate.equals(emailAdmin));
-		
-		PhoneNumberUtil pnUtil = PhoneNumberUtil.getInstance();
-		String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
-		
+		Administrator administratorToUpdate = administratorDao.findByAdministratorId(administratorId);
 		String phoneNumber = administrator.getPhoneNumber();
 		String userName = administrator.getUserName();
 		String fullName = administrator.getFullName();
@@ -143,48 +140,117 @@ public class AdministratorServiceImpl implements AdministratorService{
 		String email = administrator.getEmail();
 	    Privilege privilege = administrator.getPrivilege();
 	    
-	    try{
-			phone = pnUtil.parse(phoneNumber,"");
-			isValidNumber = pnUtil.isValidNumber(phone);
-		    isJONumber = pnUtil.getRegionCodeForNumber(phone).equals("JO");
-		} catch (Exception e) {
-			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_ERROR);
+	    if(administratorToUpdate == null || !administratorToUpdate.isStatus() ){
+	    	valid = false;
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_DELETTING_MESSAGE);
+		}
+
+	    PhoneNumberUtil pnUtil = PhoneNumberUtil.getInstance();
+	    if (phoneNumber != null && phoneNumber != "" && valid){
+			try{
+				phone = pnUtil.parse(phoneNumber,"");
+				isValidNumber = pnUtil.isValidNumber(phone);
+			    isJONumber = pnUtil.getRegionCodeForNumber(phone).equals("JO");
+			} catch (Exception e) {
+				valid = false ;
+				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_ERROR);
+			}
+			Administrator phoneNumberAdmin = administratorDao.findByPhoneNumber(administrator.getPhoneNumber());
+			if(phoneNumberAdmin != null && !administratorToUpdate.equals(phoneNumberAdmin)){
+				valid = false;
+				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_PHONENUMBER_ALREADY_EXIST_ERROR);
+			} else if (!isValidNumber && phoneNumber.substring(0, 2).equals("00")){
+				valid = false;
+				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_PREFIX_FORMAT_ERROR);			
+			} else if (!isJONumber || !isValidNumber){
+				valid = false;
+				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_PHONENUMBER_FORMAT_ERROR);
+			} else if(valid){
+				administratorToUpdate.setPhoneNumber(phoneNumber);
+				administratorToUpdate.setUpdatedAt(new Date());
+				administratorDao.save(administratorToUpdate);
+				response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, administratorToUpdate);
+			}	
 		}
 	    
-
-	    if(adminToUpdate == null || !adminToUpdate.isStatus() ){
-			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_DELETTING_MESSAGE);
-		} else if(!isValidNumber && phoneNumber.substring(0, 2).equals("00")){
-			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_PREFIX_FORMAT_ERROR);			
-		} else if (!isJONumber || !isValidNumber){
-			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_PHONENUMBER_FORMAT_ERROR);
-		} else if (phoneNumberAdmin != null && !adminToUpdate.equals(phoneNumberAdmin)){
-			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_PHONENUMBER_ALREADY_EXIST_ERROR);
-		} else if(userName.length() > 20 || userName.length() < 6){
-			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_USERNAME_LENGTH_ERROR);
-		} else if(userNameAdmin != null && !adminToUpdate.equals(userNameAdmin)){
-			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_USERNAME_ALREADY_EXIST_ERROR);
-		} else if (fullName.length() > 40 || fullName.length() <10){
-			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_FULLNAME_LENGTH_ERROR);
-		} else if(password.length() < 6 || password.length() > 10){
-			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_PASSWORD_LENGTH_ERROR);
-		} else if(emailAdmin != null && !adminToUpdate.equals(emailAdmin)){
-			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_EMAIL_ALREADY_EXIST_ERROR);
-		} else if (!email.matches(regex)) {
-			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_EMAIL_FORMAT_ERROR);
-		} else if(valid){
-			adminToUpdate.setPhoneNumber(phoneNumber);
-			adminToUpdate.setUserName(userName);
-			adminToUpdate.setFullName(fullName);
-			adminToUpdate.setPassword(password);
-			adminToUpdate.setEmail(email);
-			adminToUpdate.setPrivilege(privilege);
-			adminToUpdate.setUpdatedAt(new Date());
-			administratorDao.save(adminToUpdate);
-			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, adminToUpdate);
-		} else {
-			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_UPDATING_MESSAGE);
+	    
+	    if(userName != null && !userName.equals("") && valid){
+			Administrator userNameAdministrator = administratorDao.findByUserName(userName);
+			if(userName.length() > 20 ){
+				valid = false;
+				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_USERNAME_LENGTH_LESS_ERROR);
+			} else if (userName.length() < 6){
+				valid = false;
+				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_USERNAME_LENGTH_GREATER_ERROR);
+			} else if(userNameAdministrator != null && !administratorToUpdate.equals(userNameAdministrator)){
+				valid = false;
+				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_USERNAME_ALREADY_EXIST_ERROR);
+			} else if(valid){
+				administratorToUpdate.setUserName(userName);
+				administratorToUpdate.setUpdatedAt(new Date());
+				administratorDao.save(administratorToUpdate);
+				response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, administratorToUpdate);
+			}
 		}
+	    
+	    if(fullName != null && !fullName.equals("") && valid){
+			if (fullName.length() > 40 ){
+				valid = false;
+				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_FULLNAME_LENGTH_LESS_ERROR);
+			} else if (fullName.length() < 10){
+				valid = false;
+				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_FULLNAME_LENGTH_GREATER_ERROR);
+			} else if(valid){
+				administratorToUpdate.setFullName(fullName);
+				administratorToUpdate.setUpdatedAt(new Date());
+				administratorDao.save(administratorToUpdate);
+				response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, administratorToUpdate);
+			}
+		}
+	    
+	    
+	    if (password != null && !password.equals("") && valid){
+			if(password.length() < 6 ){
+				valid = false;
+				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_PASSWORD_LENGTH_GREATER_ERROR);
+			} else if (password.length() > 10){
+				valid = false;
+				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_PASSWORD_LENGTH_LESS_ERROR);
+			} else if(valid){
+				administratorToUpdate.setPassword(password);
+				administratorToUpdate.setUpdatedAt(new Date());
+				administratorDao.save(administratorToUpdate);
+				response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, administratorToUpdate);	
+			} 
+		}
+	    
+	    
+	    if (email != null && !email.equals("") && valid){
+			Administrator emailAdmin = administratorDao.findByEmail(email);
+			String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
+			if (!email.matches(regex)) {
+				valid = false;
+				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_EMAIL_FORMAT_ERROR);
+			} else if(emailAdmin != null && !administratorToUpdate.equals(emailAdmin)){
+				valid = false;
+				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_EMAIL_ALREADY_EXIST_ERROR);
+			} else if(valid){
+				administratorToUpdate.setEmail(email);
+				administratorToUpdate.setUpdatedAt(new Date());
+				administratorDao.save(administratorToUpdate);
+				response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, administratorToUpdate);	
+			}
+		}
+	    
+	    
+	    if (privilege != null && !privilege.equals("") && valid){
+	    	administratorToUpdate.setPrivilege(privilege);
+	    	administratorToUpdate.setUpdatedAt(new Date());
+	    	administratorDao.save(administratorToUpdate);
+			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, administratorToUpdate);	
+		}
+	    
+	    
 		return response;
 	}
 

@@ -95,21 +95,38 @@ public class ItemServiceImpl  implements ItemService{
 		ResponseObject response = null;
 		
 		Item itemToUpdate = itemDao.findByItemId(itemId);
+		String itemName = item.getItemName();
+		double Price = item.getPrice();
+		String description = item.getDescription();
 		
 		boolean valid = ((itemToUpdate != null && itemToUpdate.isStatus()) && item != null);
 		
 		if(itemToUpdate == null || !itemToUpdate.isStatus()){
+			valid = false ;
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_NO_ITEM_ERROR);
-		} else if (valid){
-			itemToUpdate.setItemName(item.getItemName());
+		} 
+		if (itemName != null && !itemName.equals("") && valid){
+			itemToUpdate.setItemName(itemName);
+			itemToUpdate.setUpdatedAt(new Date());
+			itemDao.save(itemToUpdate);
+			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_CREATE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, itemToUpdate);
+			}
+		
+		if(Price != 0.0 && valid){
 			itemToUpdate.setPrice(item.getPrice());
+			itemToUpdate.setUpdatedAt(new Date());
+			itemDao.save(itemToUpdate);
+			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_CREATE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, itemToUpdate);
+			}
+		
+		
+		if (description != null && !description.equals("") && valid){
 			itemToUpdate.setDescription(item.getDescription());
 			itemToUpdate.setUpdatedAt(new Date());
 			itemDao.save(itemToUpdate);
 			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_CREATE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, itemToUpdate);
-			} else {
-			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_UPDATING_MESSAGE);
-		}
+			}
+		
 		return response;
 	}
 
