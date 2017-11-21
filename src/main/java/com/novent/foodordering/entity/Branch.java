@@ -9,9 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 @Entity
 public class Branch implements Serializable{
 
@@ -77,27 +74,21 @@ public class Branch implements Serializable{
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
-	@JsonIgnore
 	public Date getCreatedAt() {
 		return createdAt;
 	}
-	@JsonProperty
 	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
-	@JsonIgnore
 	public Date getUpdatedAt() {
 		return updatedAt;
 	}
-	@JsonProperty
 	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
 	}
-	@JsonIgnore
 	public Date getDeletedAt() {
 		return deletedAt;
 	}
-	@JsonProperty
 	public void setDeletedAt(Date deletedAt) {
 		this.deletedAt = deletedAt;
 	}

@@ -80,58 +80,42 @@ public class Users implements Serializable{
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
 	}
+	@JsonIgnore
 	public String getPassword() {
 		return password;
 	}
+	@JsonProperty
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	@JsonIgnore
 	public Date getCreatedAt() {
 		return createdAt;
 	}
-	@JsonProperty
 	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
-	@JsonIgnore
 	public Date getUpdatedAt() {
 		return updatedAt;
 	}
-	@JsonProperty
 	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
 	}
-	@JsonIgnore
 	public Date getDeletedAt() {
 		return deletedAt;
 	}
-	@JsonProperty
 	public void setDeletedAt(Date deletedAt) {
 		this.deletedAt = deletedAt;
 	}
-	
 	public boolean isStatus() {
 		return status;
 	}
-	
 	public void setStatus(boolean status) {
 		this.status = status;
 	}
-
 	public String getEmail() {
 		return email;
 	}
-
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
-//	public Orders getOrder() {
-//		return order;
-//	}
-//
-//	public void setOrder(Orders order) {
-//		this.order = order;
-//	}
 }

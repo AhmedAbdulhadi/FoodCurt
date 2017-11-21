@@ -81,6 +81,7 @@ public class UserServiceImpl implements UserService{
 		} catch (Exception e) {
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_ERROR);
 		}
+		
 		if (phoneNumber == null || phoneNumber.equals("")){
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_PHONENUMBER_REQUIRED_ERROR);				
 		} else if (userName == null || userName.equals("")){
@@ -97,7 +98,7 @@ public class UserServiceImpl implements UserService{
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_PHONENUMBER_FORMAT_ERROR);
 		} else if(phoneNumberUser != null){
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_PHONENUMBER_ALREADY_EXIST_ERROR);
-		} else if(userName.length() > 20 || userName.length() < 6){
+		}  else if(userName.length() > 20 || userName.length() < 6){
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_USERNAME_LENGTH_ERROR);
 		} else if(userNameUser != null){
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_USERNAME_ALREADY_EXIST_ERROR);
@@ -134,11 +135,14 @@ public class UserServiceImpl implements UserService{
 		String password = user.getPassword();
 		String email = user.getEmail();
 		
-		if(userToUpdate == null || !userToUpdate.isStatus()){
+		if(userToUpdate == null ){
 			valid = false ;
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_NO_USER_ERROR);
+		} else if(!userToUpdate.isStatus()){
+			valid = false ;
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_UPDATE_USER_ERROR);
 		}
-		
+//		@Pattern(regexp="(^$|[0-9]{10})")
 		PhoneNumberUtil pnUtil = PhoneNumberUtil.getInstance();
 	    if (phoneNumber != null && phoneNumber != "" && valid){
 			try{
@@ -149,6 +153,7 @@ public class UserServiceImpl implements UserService{
 				valid = false ;
 				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_ERROR);
 			}
+			
 			Users phoneNumberUser = userDao.findByPhoneNumber(user.getPhoneNumber());
 			if(phoneNumberUser != null && !userToUpdate.equals(phoneNumberUser)){
 				valid = false;

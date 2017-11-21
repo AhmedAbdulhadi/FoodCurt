@@ -60,6 +60,8 @@ public class ResponseMessage {
 	public final static String FAILED_BRANCHNAME_REQUIRED_ERROR = "Branch Name is required field";
 	public final static String FAILED_AREAID_REQUIRED_ERROR = "areaId is required field";
 	public final static String FAILED_RESTAURANTID_REQUIRED_ERROR = "restaurantId is required field";
+	public final static String FAILED_UPDATE_USER_ERROR = "User account is suspended";
+
 
 	
 

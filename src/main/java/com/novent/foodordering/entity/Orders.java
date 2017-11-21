@@ -9,9 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 @Entity
 public class Orders implements Serializable{
 
@@ -69,27 +66,21 @@ public class Orders implements Serializable{
 	public void setTotalamount(double totalamount) {
 		this.totalamount = totalamount;
 	}
-	@JsonIgnore
 	public Date getCreatedAt() {
 		return createdAt;
 	}
-	@JsonProperty
 	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
-	@JsonIgnore
 	public Date getUpdatedAt() {
 		return updatedAt;
 	}
-	@JsonProperty
 	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
 	}
-	@JsonIgnore
 	public Date getDeletedAt() {
 		return deletedAt;
 	}
-	@JsonProperty
 	public void setDeletedAt(Date deletedAt) {
 		this.deletedAt = deletedAt;
 	}

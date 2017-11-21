@@ -85,75 +85,60 @@ private static final long serialVersionUID = 1L;
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
 	}
+	@JsonIgnore
 	public String getPassword() {
 		return password;
 	}
+	@JsonProperty
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	@JsonIgnore
 	public Date getCreatedAt() {
 		return createdAt;
 	}
-	@JsonProperty
 	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
-	@JsonIgnore
 	public Date getUpdatedAt() {
 		return updatedAt;
 	}
-	@JsonProperty
 	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
 	}
-	@JsonIgnore
 	public Date getDeletedAt() {
 		return deletedAt;
 	}
-	@JsonProperty
 	public void setDeletedAt(Date deletedAt) {
 		this.deletedAt = deletedAt;
 	}
-	
 	public boolean isStatus() {
 		return status;
 	}
-	
 	public void setStatus(boolean status) {
 		this.status = status;
 	}
-
 	public String getEmail() {
 		return email;
 	}
-
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
 	public Privilege getPrivilege() {
 		return privilege;
 	}
-
 	public void setPrivilege(Privilege privilege) {
 		this.privilege = privilege;
 	}
-
 	public List<Restaurant> getRestaurant() {
 		return restaurant;
 	}
-
 	public void setRestaurant(List<Restaurant> restaurant) {
 		this.restaurant = restaurant;
 	}
-
 	public long getAdministratorId() {
 		return administratorId;
 	}
-
 	public void setAdministratorId(long administratorId) {
 		this.administratorId = administratorId;
 	}
 }
-

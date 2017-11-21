@@ -11,9 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 @Entity
 public class Area implements Serializable{
 
@@ -59,27 +56,21 @@ public class Area implements Serializable{
 	public void setAreaName(String areaName) {
 		this.areaName = areaName;
 	}
-	@JsonIgnore
 	public Date getCreatedAt() {
 		return createdAt;
 	}
-	@JsonProperty
 	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
-	@JsonIgnore
 	public Date getUpdatedAt() {
 		return updatedAt;
 	}
-	@JsonProperty
 	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
 	}
-	@JsonIgnore
 	public Date getDeletedAt() {
 		return deletedAt;
 	}
-	@JsonProperty
 	public void setDeletedAt(Date deletedAt) {
 		this.deletedAt = deletedAt;
 	}
