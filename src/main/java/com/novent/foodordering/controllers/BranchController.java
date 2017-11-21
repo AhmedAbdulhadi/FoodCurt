@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.novent.foodordering.entity.Branch;
@@ -21,8 +22,11 @@ public class BranchController {
 	private BranchService branchService;
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public ResponseObject getAllBranch() {
-		return branchService.getAllBranch();
+	public ResponseObject getBranchByStatus(@RequestParam(value = "status", required=false) Boolean status) {
+		 if(status == null) {
+		        status = true;
+		    }
+		return branchService.getBranchByStatus(status);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/{branchId}")

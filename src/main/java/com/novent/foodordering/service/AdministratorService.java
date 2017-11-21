@@ -8,7 +8,7 @@ import com.novent.foodordering.util.ResponseObject;
 @Service
 public interface AdministratorService {
 
-    public ResponseObject getAllAdministrators();
+	public ResponseObject getAdministratorsByStatus(boolean status);
 	
 	public ResponseObject getAdministratorById(long AdministratorId);
 	

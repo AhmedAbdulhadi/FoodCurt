@@ -26,11 +26,11 @@ public class UserServiceImpl implements UserService{
 	
 	@Autowired
 	private UserDao userDao;
-
+	
 	@Override
-	public ResponseObject getAllUser() {
+	public ResponseObject getUserByStatus(boolean status) {
 		ResponseObject response = null;
-		List<Users> allUsers = userDao.findAll();
+		List<Users> allUsers = userDao.findByStatus(status);
 		if(!allUsers.isEmpty()){
 			response = new ResponseObjectAll<>(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_GETTING_MESSAGE, allUsers);
 		} else {
@@ -257,5 +257,7 @@ public class UserServiceImpl implements UserService{
 		}
 		return response;
 	}
+
+	
 
 }

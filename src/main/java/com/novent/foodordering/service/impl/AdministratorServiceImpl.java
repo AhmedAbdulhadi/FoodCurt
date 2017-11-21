@@ -29,9 +29,9 @@ public class AdministratorServiceImpl implements AdministratorService{
 	private AdministratorDao administratorDao;
 
 	@Override
-	public ResponseObject getAllAdministrators() {
+	public ResponseObject getAdministratorsByStatus(boolean status) {
 		ResponseObject response = null;
-		List<Administrator> allAdmins = administratorDao.findAll();
+		List<Administrator> allAdmins = administratorDao.findByStatus(status);
 		if(!allAdmins.isEmpty()){
 			response = new ResponseObjectAll<Administrator>(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_GETTING_MESSAGE, allAdmins);
 		} else {

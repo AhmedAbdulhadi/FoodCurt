@@ -12,9 +12,9 @@ import com.novent.foodordering.entity.Orders;
 public interface OrderDao extends CrudRepository<Orders, Long>{
 	
 	 public List<Orders> findAll();
-		
+	 
 	 public Orders findByOrderId(long orderId);
-		
+
    	 public List<Orders> findByStatusName (String statusName);
    	 
    	 

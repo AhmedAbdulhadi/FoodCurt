@@ -11,7 +11,7 @@ import com.novent.foodordering.entity.OrderItem;
 public interface OrderItemDao extends CrudRepository<OrderItem, Long> {
 	
 	 public List<OrderItem> findAll();
-	
+	 
 	 public OrderItem findByOrdreItemId(long ordreItemId);
 
 }

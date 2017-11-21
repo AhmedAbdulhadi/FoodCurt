@@ -12,6 +12,8 @@ public interface BranchDao extends CrudRepository<Branch, Long>{
 	
 	public List<Branch> findAll();
 	
+	public List<Branch> findByStatus(boolean status);
+	
 	public Branch findByBranchId(long branchId);
 	
 	public Branch findByAreaId(long areaId);

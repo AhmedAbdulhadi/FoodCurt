@@ -15,7 +15,6 @@ import com.novent.foodordering.constatnt.ResponseStatus;
 import com.novent.foodordering.dao.AreaDao;
 import com.novent.foodordering.dao.BranchDao;
 import com.novent.foodordering.dao.RestaurantDao;
-import com.novent.foodordering.entity.Administrator;
 import com.novent.foodordering.entity.Area;
 import com.novent.foodordering.entity.Branch;
 import com.novent.foodordering.entity.Restaurant;
@@ -37,9 +36,9 @@ public class BranchServiceImpl implements BranchService{
 	private AreaDao areaDao;
 
 	@Override
-	public ResponseObject getAllBranch() {
+	public ResponseObject getBranchByStatus(boolean status) {
 		ResponseObject response = null;
-		List<Branch> allBranchs = branchDao.findAll();
+		List<Branch> allBranchs = branchDao.findByStatus(status);
 		if(!allBranchs.isEmpty()){
 			response = new ResponseObjectAll<Branch>(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_GETTING_MESSAGE, allBranchs);
 		} else {

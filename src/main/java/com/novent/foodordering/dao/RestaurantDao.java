@@ -12,6 +12,8 @@ public interface RestaurantDao extends CrudRepository<Restaurant, Long>{
 	
 	public List<Restaurant> findAll();
 	
+	public List<Restaurant> findByStatus(boolean status);
+	
 	public Restaurant findByRestaurantId(long restaurantId);
 	
 	public Restaurant findByRestaurantName(String restaurantName);

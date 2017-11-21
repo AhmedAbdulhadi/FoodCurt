@@ -30,9 +30,9 @@ public class AreaServiceImpl implements AreaService{
 	private AdministratorDao administratorDao;
 
 	@Override
-	public ResponseObject getAllAreas() {
+	public ResponseObject getAreaByStatus(boolean status) {
 		ResponseObject response = null;
-		List<Area> allAreas = areaDao.findAll();
+		List<Area> allAreas = areaDao.findByStatus(status);
 		if(!allAreas.isEmpty()){
 			response = new ResponseObjectAll<>(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_GETTING_MESSAGE, allAreas);
 		} else {

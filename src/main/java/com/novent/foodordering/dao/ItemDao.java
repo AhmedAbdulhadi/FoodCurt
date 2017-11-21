@@ -12,5 +12,7 @@ public interface ItemDao extends CrudRepository<Item, Long>{
 
 	public List<Item> findAll();
 	
+	public List<Item> findByStatus(boolean status);
+	
 	public Item findByItemId(long itemId);
 }

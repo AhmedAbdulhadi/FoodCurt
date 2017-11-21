@@ -12,6 +12,8 @@ public interface AdministratorDao extends CrudRepository<Administrator, Long>{
  
 	public List<Administrator> findAll();
 	
+	public List<Administrator> findByStatus(boolean status);
+	
 	public Administrator findByAdministratorId(long adminId);
 	
 	public Administrator findByUserName(String userName);

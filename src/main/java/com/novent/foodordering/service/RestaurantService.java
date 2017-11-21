@@ -7,9 +7,9 @@ import com.novent.foodordering.util.ResponseObject;
 
 @Service
 public interface RestaurantService {
-
-public ResponseObject getAllRestaurant();
 	
+	public ResponseObject getRestaurantByStatus(boolean status);
+
 	public ResponseObject getRestaurantById(long restaurantId);
 	
 	public ResponseObject createRestaurant(Restaurant restaurant);

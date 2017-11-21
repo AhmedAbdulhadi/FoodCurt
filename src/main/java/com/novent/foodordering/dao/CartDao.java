@@ -11,7 +11,7 @@ import com.novent.foodordering.entity.Cart;
 public interface CartDao extends CrudRepository<Cart, Long> {
 	
 	 public List<Cart> findAll();
-	
+	 
 	 public Cart findByCartId(long cartId);
 
 }

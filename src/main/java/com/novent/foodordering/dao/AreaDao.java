@@ -12,6 +12,8 @@ public interface AreaDao extends CrudRepository<Area, Long>{
 
 	public List<Area> findAll();
 	
+	public List<Area> findByStatus(boolean status);
+	
 	public Area findByAreaId(long areaId);
 	
 	public Area findByAreaName(String areaName);

@@ -7,8 +7,8 @@ import com.novent.foodordering.util.ResponseObject;
 
 @Service
 public interface AreaService {
-	
-	public ResponseObject getAllAreas();
+		
+	public ResponseObject getAreaByStatus(boolean status);
 	
 	public ResponseObject getAreaById(long areaId);
 	

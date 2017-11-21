@@ -7,8 +7,8 @@ import com.novent.foodordering.util.ResponseObject;
 
 @Service
 public interface UserService {
-	
-	public ResponseObject getAllUser();
+
+	public ResponseObject getUserByStatus(boolean status);
 	
 	public ResponseObject getUserById(long userId);
 	

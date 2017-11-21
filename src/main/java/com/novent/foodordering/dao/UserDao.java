@@ -10,9 +10,9 @@ import com.novent.foodordering.entity.Users;
 
 @Repository
 public interface UserDao extends CrudRepository<Users, Long>{
-	
-	public List<Users> findAll();
-	
+		
+	public List<Users> findByStatus(boolean status);
+
 	public Users findByUserId(long userId);
 	
 	public Users findByUserName(String userName);

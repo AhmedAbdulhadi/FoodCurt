@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.novent.foodordering.entity.Administrator;
@@ -21,8 +22,11 @@ public class AdministratorController {
 	private AdministratorService administratorService;
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public ResponseObject getAllAdministrators() {
-		return administratorService.getAllAdministrators();
+	public ResponseObject getAdministratorsByStatus(@RequestParam(value = "status", required=false) Boolean status) {
+		 if(status == null) {
+		        status = true;
+		    }
+		return administratorService.getAdministratorsByStatus(status);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/{AdministratorId}")

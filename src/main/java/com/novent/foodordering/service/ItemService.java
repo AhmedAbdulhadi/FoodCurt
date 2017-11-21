@@ -9,7 +9,7 @@ import com.novent.foodordering.util.ResponseObject;
 @Service
 public interface ItemService {
 	
-	public ResponseObject getAllItem();
+	public ResponseObject getItemByStatus(boolean status);
 	
 	public ResponseObject getItemById(long itemId);
 	

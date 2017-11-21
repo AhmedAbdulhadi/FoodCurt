@@ -33,9 +33,9 @@ public class ItemServiceImpl  implements ItemService{
 
 	
 	@Override
-	public ResponseObject getAllItem() {
+	public ResponseObject getItemByStatus(boolean status) {
 		ResponseObject response = null;
-		List<Item> allItems = itemDao.findAll();
+		List<Item> allItems = itemDao.findByStatus(status);
 		if(!allItems.isEmpty()){
 			response = new ResponseObjectAll<Item>(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_GETTING_MESSAGE, allItems);
 		} else {

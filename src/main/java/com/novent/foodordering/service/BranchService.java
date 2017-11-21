@@ -7,8 +7,8 @@ import com.novent.foodordering.util.ResponseObject;
 
 @Service
 public interface BranchService {
-	
-    public ResponseObject getAllBranch();
+	    
+	public ResponseObject getBranchByStatus(boolean status);
 	
 	public ResponseObject getBranchById(long branchId);
 	

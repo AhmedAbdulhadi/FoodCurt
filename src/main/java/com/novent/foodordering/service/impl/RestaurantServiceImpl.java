@@ -32,9 +32,9 @@ public class RestaurantServiceImpl implements RestaurantService{
 	private AdminDao adminDao;
 	
 	@Override
-	public ResponseObject getAllRestaurant() {
+	public ResponseObject getRestaurantByStatus(boolean status) {
 		ResponseObject response = null;
-		List<Restaurant> allRestaurants = restaurantDao.findAll();
+		List<Restaurant> allRestaurants = restaurantDao.findByStatus(status);
 		if(!allRestaurants.isEmpty()){
 			response = new ResponseObjectAll<Restaurant>(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_GETTING_MESSAGE, allRestaurants);
 		} else {
