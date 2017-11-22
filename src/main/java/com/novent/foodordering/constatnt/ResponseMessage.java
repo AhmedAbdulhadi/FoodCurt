@@ -69,6 +69,8 @@ public class ResponseMessage {
 	public final static String FAILED_UPDATE_AREA_ERROR = "Area is suspended";
 	public final static String FAILED_UPDATE_RESTAURANT_ERROR = "Restaurant is suspended";
 	public final static String FAILED_UPDATE_ITEM_ERROR = "Item is suspended";
+	public final static String FAILED_UPDATE_BRANCH_ERROR = "Branch is suspended";
+
 
 
 

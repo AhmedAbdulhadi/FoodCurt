@@ -101,8 +101,12 @@ public class BranchServiceImpl implements BranchService{
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_RESTAURANTID_REQUIRED_ERROR);				
 		}  else if (restaurant == null){
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_GET_CODE, ResponseMessage.FAILED_NO_RESTAURANT_ERROR);
+		} else if (!restaurant.isStatus()){
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_GET_CODE, ResponseMessage.FAILED_UPDATE_RESTAURANT_ERROR);
 		} else if(area == null){
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_GET_CODE, ResponseMessage.FAILED_NO_AREA_ERROR);
+		} else if (!area.isStatus()){
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_GET_CODE, ResponseMessage.FAILED_UPDATE_AREA_ERROR);
 		} else if(branchName.length() < 5 || branchName.length() > 15){
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_BRANCH_NAME_ERROR);			
 		} else if(phoneNumber != null && phoneNumber != "" && !isValidNumber && phoneNumber.substring(0, 2).equals("00")){
@@ -150,10 +154,13 @@ public class BranchServiceImpl implements BranchService{
 		long areaId = branch.getAreaId();
 		
 		
-		if( branchToUpdate == null || !branchToUpdate.isStatus()){
+		if( branchToUpdate == null){
 			valid = false;
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_GET_CODE, ResponseMessage.FAILED_NO_BRANCH_ERROR);
-		} 
+		} else if (!branchToUpdate.isStatus()){
+			valid = false;
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_GET_CODE, ResponseMessage.FAILED_UPDATE_BRANCH_ERROR);
+		}
 		
 		
 		PhoneNumberUtil pnUtil = PhoneNumberUtil.getInstance();
