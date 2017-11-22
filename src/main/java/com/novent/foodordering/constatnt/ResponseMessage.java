@@ -50,6 +50,7 @@ public class ResponseMessage {
 	public final static String FAILED_RESTAURANT_ALREADY_EXIST_ERROR = "Restaurant Name already exist";
 	public final static String FAILED_PHONENUMBER_REQUIRED_ERROR = "Phone number is required field";
 	public final static String FAILED_USERNAME_REQUIRED_ERROR = "UserName is required field";
+	public final static String FAILED_USERID_REQUIRED_ERROR = "UserId is required field";
 	public final static String FAILED_FULLNAME_REQUIRED_ERROR = "FullName is required field";
 	public final static String FAILED_PASSWORD_REQUIRED_ERROR = "Password is required field";
 	public final static String FAILED_EMAIL_ADDRESS_REQUIRED_ERROR = "Email Address is required field";
@@ -61,8 +62,10 @@ public class ResponseMessage {
 	public final static String FAILED_PRICE_REQUIRED_ERROR = "Price is required field";
 	public final static String FAILED_RESTAURANTNAME_REQUIRED_ERROR = "Restaurant Name is required field";
 	public final static String FAILED_BRANCHNAME_REQUIRED_ERROR = "Branch Name is required field";
+	public final static String FAILED_BRANCHID_REQUIRED_ERROR = "Branch Id is required field";
 	public final static String FAILED_AREAID_REQUIRED_ERROR = "areaId is required field";
 	public final static String FAILED_RESTAURANTID_REQUIRED_ERROR = "restaurantId is required field";
+	public final static String FAILED_QUANTITY_REQUIRED_ERROR = "quantity is required field";
 	public final static String FAILED_UPDATE_USER_ERROR = "User account is suspended";
 	public final static String FAILED_UPDATE_ADMINISTRATOR_ERROR = "Administrator account is suspended";
 	public final static String FAILED_UPDATE_ADMIN_ERROR = "Admin account is suspended";
@@ -70,6 +73,9 @@ public class ResponseMessage {
 	public final static String FAILED_UPDATE_RESTAURANT_ERROR = "Restaurant is suspended";
 	public final static String FAILED_UPDATE_ITEM_ERROR = "Item is suspended";
 	public final static String FAILED_UPDATE_BRANCH_ERROR = "Branch is suspended";
+	public final static String FAILED_NOORDER_ERROR = "Items is required field ";
+
+	
 
 
 

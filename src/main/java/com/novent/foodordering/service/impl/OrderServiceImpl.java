@@ -85,22 +85,27 @@ public class OrderServiceImpl implements OrderService{
 		Users user = userDao.findByUserId(order.getUserId());
 		Branch branch = branchDao.findByBranchId(order.getBranchId());
 				
-		boolean valid = order != null && user != null && branch != null ;
 		
 		long userId = order.getUserId();
 		long branchId = order.getBranchId();
 		int numberOfChair = order.getNumberOfChair();
 		boolean takeAway = order.getTakeAway();
 		List<OrderItem> items = order.getItems();
-
-		if (!items.isEmpty() && valid){
+ 		boolean validQuen = true;
+ 		boolean validItem = true;
+ 		
+		boolean valid = order != null && user != null && branch != null && userId != 0 && branchId != 0 ;
+		if(items != null){
+			if (!items.isEmpty() && valid){
 				for (Iterator<OrderItem> iterator = items.iterator(); iterator.hasNext();){
 					OrderItem value = iterator.next();
 					if (value.getQuantity() == 0){
 						valid = false;
+						validQuen = false;
 					}
 					Item item = itemDao.findByItemId(value.getItemId());
 					if (item != null){
+						if(item.isStatus()){
 						value.setPrice(item.getPrice());
 						value.setItemName(item.getItemName());
 						value.setItemId(value.getItemId());
@@ -108,21 +113,43 @@ public class OrderServiceImpl implements OrderService{
 					int quantity =value.getQuantity();
 					double price = item.getPrice();
 					totalPrice +=(quantity*price);
+						} else {
+							validItem=false;
+							valid = false;
+						}
 					} else {
 					valid = false;
 					isItem = false;
 					}
 				}	
+			}
 		}
 		 if(takeAway){
 				numberOfChair = 0;
 			}
-		if (user == null) {
+		 if(!validQuen ){
+				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_QUANTITY_REQUIRED_ERROR);				
+		 } else if(userId == 0 ){
+			valid = false;
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_USERID_REQUIRED_ERROR);				
+		} else if (branchId ==0){
+			valid = false;
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_BRANCHID_REQUIRED_ERROR);
+		} else if(items == null){
+			valid = false;
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_NOORDER_ERROR);
+		} else if (user == null) {
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_NO_USER_ERROR);
+		} else if (!user.isStatus()){ 
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_UPDATE_USER_ERROR);
 		} else if (branch == null) {
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_NO_BRANCH_ERROR);
+		} else if (!branch.isStatus()){
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_UPDATE_BRANCH_ERROR);
 		} else if (!isItem) {
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_NO_ITEM_ERROR);
+		} else if (!validItem){
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_UPDATE_ITEM_ERROR);
 		} else if (valid) {
 			Cart cart = new Cart();
 			Orders newOrder = new Orders();
@@ -139,8 +166,8 @@ public class OrderServiceImpl implements OrderService{
 			orderDao.save(newOrder);
 			id = newOrder.getOrderId();
 			response = new ResponseObjectCrud(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_CREATE_CODE,	ResponseMessage.SUCCESS_CREATING_MESSAGE, id);
-		} else {
-			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_CREATING_MESSAGE);
+//		} else {
+//			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_CREATING_MESSAGE);
 		} 
 		return response;
 	}
@@ -207,7 +234,7 @@ public class OrderServiceImpl implements OrderService{
 	public ResponseObject deleteOredr(long orderId) {
 		ResponseObject response = null;
 		Orders order = orderDao.findByOrderId(orderId);
-		if(order != null && order.getStatus() == 0){
+		if(order != null && order.getStatus() == 1){
 			order.setStatus(3);
 			order.setStatusName(3);
 			order.setDeletedAt(new Date());
