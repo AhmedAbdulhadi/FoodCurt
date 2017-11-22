@@ -1,6 +1,8 @@
 package com.novent.foodordering.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import com.novent.foodordering.dao.AreaDao;
 import com.novent.foodordering.entity.Administrator;
 import com.novent.foodordering.entity.Area;
 import com.novent.foodordering.service.AreaService;
+import com.novent.foodordering.util.Areas;
 import com.novent.foodordering.util.ResponseObject;
 import com.novent.foodordering.util.ResponseObjectAll;
 import com.novent.foodordering.util.ResponseObjectCrud;
@@ -34,7 +37,12 @@ public class AreaServiceImpl implements AreaService{
 		ResponseObject response = null;
 		List<Area> allAreas = areaDao.findByStatus(status);
 		if(!allAreas.isEmpty()){
-			response = new ResponseObjectAll<>(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_GETTING_MESSAGE, allAreas);
+			List<Areas> jsonAreas = new ArrayList<Areas>(); 
+			for (Iterator<Area> iterator = allAreas.iterator(); iterator.hasNext();){
+				Area area = iterator.next();
+				jsonAreas.add(new Areas(area.getAreaId(), area.getAreaName(), area.getAdministratorId(), area.getAddress(), area.getLongittude(), area.getLattiude(),area.getCreatedAt(), area.getUpdatedAt(), area.getDeletedAt(), area.isStatus()));
+			}
+			response = new ResponseObjectAll<Areas>(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_GETTING_MESSAGE, jsonAreas);
 		} else {
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_GET_CODE, ResponseMessage.FAILED_GETTING_MESSAGE);
 		}
@@ -46,7 +54,8 @@ public class AreaServiceImpl implements AreaService{
 		ResponseObject response = null;
 		Area area = areaDao.findByAreaId(areaId);
 		if (area != null){
-			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_GETTING_MESSAGE, area);
+			Areas jsonArea = new Areas(area.getAreaId(), area.getAreaName(), area.getAdministratorId(), area.getAddress(), area.getLongittude(), area.getLattiude(),area.getCreatedAt(), area.getUpdatedAt(), area.getDeletedAt(), area.isStatus());
+			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_GETTING_MESSAGE, jsonArea);
 		} else {
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_GET_CODE, ResponseMessage.FAILED_GETTING_MESSAGE);
 		}
@@ -70,6 +79,8 @@ public class AreaServiceImpl implements AreaService{
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_ADMINISTRATORID_REQUIRED_ERROR);
 		} else if(administrator == null){
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_ADMINISTRATOR_NUMBER_ERROR);
+		} else if(!administrator.isStatus()){
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_UPDATE_ADMINISTRATOR_ERROR);
 		} else if(areaName != null ){
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_AREANAME_ALREADY_EXIST_ERROR);
 		} else if(valid){
@@ -99,9 +110,12 @@ public class AreaServiceImpl implements AreaService{
 		double lattiude = area.getLattiude();
 		long administratorId = area.getAdministratorId();
 		
-		if(areaToUpdate == null || !areaToUpdate.isStatus()){
+		if(areaToUpdate == null){
 			valid = false;
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_DELETTING_MESSAGE);
+		} else if(!areaToUpdate.isStatus()){
+			valid = false;
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_UPDATE_AREA_ERROR);
 		}
 		
 		if (Name != null && !Name.equals("") && valid){
@@ -113,7 +127,9 @@ public class AreaServiceImpl implements AreaService{
 				areaToUpdate.setAreaName(Name);
 				areaToUpdate.setUpdatedAt(new Date());
 				areaDao.save(areaToUpdate);
-				response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, areaToUpdate);	
+				Areas jsonArea = new Areas(areaToUpdate.getAreaId(), areaToUpdate.getAreaName(), areaToUpdate.getAdministratorId(), areaToUpdate.getAddress(), areaToUpdate.getLongittude(),
+						                   areaToUpdate.getLattiude(),areaToUpdate.getCreatedAt(), areaToUpdate.getUpdatedAt(), areaToUpdate.getDeletedAt(), areaToUpdate.isStatus());
+				response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, jsonArea);	
 			}
 		}
 		
@@ -122,11 +138,15 @@ public class AreaServiceImpl implements AreaService{
 			if(administrator == null){
 				valid = false;
 				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_ADMINISTRATOR_NUMBER_ERROR);
+			} else if(!administrator.isStatus()){
+				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_UPDATE_ADMINISTRATOR_ERROR);
 			} else if (valid){
 			areaToUpdate.setAdministratorId(administratorId);
 			areaToUpdate.setUpdatedAt(new Date());
 			areaDao.save(areaToUpdate);
-			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, areaToUpdate);	
+			Areas jsonArea = new Areas(areaToUpdate.getAreaId(), areaToUpdate.getAreaName(), areaToUpdate.getAdministratorId(), areaToUpdate.getAddress(), areaToUpdate.getLongittude(),
+	                   areaToUpdate.getLattiude(),areaToUpdate.getCreatedAt(), areaToUpdate.getUpdatedAt(), areaToUpdate.getDeletedAt(), areaToUpdate.isStatus());
+			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, jsonArea);	
 			}
 		}
 		
@@ -134,22 +154,28 @@ public class AreaServiceImpl implements AreaService{
 			areaToUpdate.setAddress(address);
 			areaToUpdate.setUpdatedAt(new Date());
 			areaDao.save(areaToUpdate);
-			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, areaToUpdate);
-		}
+			Areas jsonArea = new Areas(areaToUpdate.getAreaId(), areaToUpdate.getAreaName(), areaToUpdate.getAdministratorId(), areaToUpdate.getAddress(), areaToUpdate.getLongittude(),
+	                   areaToUpdate.getLattiude(),areaToUpdate.getCreatedAt(), areaToUpdate.getUpdatedAt(), areaToUpdate.getDeletedAt(), areaToUpdate.isStatus());
+			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, jsonArea);	
+			}
 		
 		if(longittude != 0 && valid ){
 			areaToUpdate.setLongittude(longittude);;
 			areaToUpdate.setUpdatedAt(new Date());
 			areaDao.save(areaToUpdate);
-			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, areaToUpdate);
-		}
+			Areas jsonArea = new Areas(areaToUpdate.getAreaId(), areaToUpdate.getAreaName(), areaToUpdate.getAdministratorId(), areaToUpdate.getAddress(), areaToUpdate.getLongittude(),
+	                   areaToUpdate.getLattiude(),areaToUpdate.getCreatedAt(), areaToUpdate.getUpdatedAt(), areaToUpdate.getDeletedAt(), areaToUpdate.isStatus());
+			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, jsonArea);	
+			}
 		
 		if(lattiude != 0 && valid ){
 			areaToUpdate.setLattiude(lattiude);
 			areaToUpdate.setUpdatedAt(new Date());
 			areaDao.save(areaToUpdate);
-			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, areaToUpdate);
-		}
+			Areas jsonArea = new Areas(areaToUpdate.getAreaId(), areaToUpdate.getAreaName(), areaToUpdate.getAdministratorId(), areaToUpdate.getAddress(), areaToUpdate.getLongittude(),
+	                   areaToUpdate.getLattiude(),areaToUpdate.getCreatedAt(), areaToUpdate.getUpdatedAt(), areaToUpdate.getDeletedAt(), areaToUpdate.isStatus());
+			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, jsonArea);	
+			}
 		return response;
 	}
 
