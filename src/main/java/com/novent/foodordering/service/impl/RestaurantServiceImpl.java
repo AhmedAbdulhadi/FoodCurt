@@ -1,6 +1,8 @@
 package com.novent.foodordering.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import com.novent.foodordering.util.ResponseObject;
 import com.novent.foodordering.util.ResponseObjectAll;
 import com.novent.foodordering.util.ResponseObjectCrud;
 import com.novent.foodordering.util.ResponseObjectData;
+import com.novent.foodordering.util.Restaurants;
 
 @Service
 @Component
@@ -36,7 +39,14 @@ public class RestaurantServiceImpl implements RestaurantService{
 		ResponseObject response = null;
 		List<Restaurant> allRestaurants = restaurantDao.findByStatus(status);
 		if(!allRestaurants.isEmpty()){
-			response = new ResponseObjectAll<Restaurant>(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_GETTING_MESSAGE, allRestaurants);
+			List<Restaurants> jsonRestaurants = new ArrayList<Restaurants>(); 
+			for (Iterator<Restaurant> iterator = allRestaurants.iterator(); iterator.hasNext();){
+				Restaurant restaurant = iterator.next();
+				jsonRestaurants.add(new Restaurants(restaurant.getRestaurantId(), restaurant.getRestaurantName(), restaurant.getPhoneNumber(), restaurant.getUserName(), restaurant.getEmail(),
+						                            restaurant.getAdminId(), restaurant.getNumberOfBranches(), restaurant.getRate(), restaurant.getWorkingHours(), restaurant.getCreatedAt(),
+						                            restaurant.getUpdatedAt(), restaurant.getDeletedAt(),restaurant.isStatus()));
+			}
+			response = new ResponseObjectAll<Restaurants>(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_GETTING_MESSAGE, jsonRestaurants);
 		} else {
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_GET_CODE, ResponseMessage.FAILED_GETTING_MESSAGE);
 		}
@@ -48,7 +58,10 @@ public class RestaurantServiceImpl implements RestaurantService{
 		ResponseObject response = null;
 		Restaurant restaurant = restaurantDao.findByRestaurantId(restaurantId);
 		if (restaurant != null){
-			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_GETTING_MESSAGE, restaurant);
+			Restaurants restaurants = new Restaurants(restaurant.getRestaurantId(), restaurant.getRestaurantName(), restaurant.getPhoneNumber(), restaurant.getUserName(), restaurant.getEmail(),
+                    restaurant.getAdminId(), restaurant.getNumberOfBranches(), restaurant.getRate(), restaurant.getWorkingHours(), restaurant.getCreatedAt(),
+                    restaurant.getUpdatedAt(), restaurant.getDeletedAt(),restaurant.isStatus());
+			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_GETTING_MESSAGE, restaurants);
 		} else {
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_GET_CODE, ResponseMessage.FAILED_GETTING_MESSAGE);
 		}
@@ -79,6 +92,7 @@ public class RestaurantServiceImpl implements RestaurantService{
 		String userName = restaurant.getUserName();
 		String password = restaurant.getPassword();
 		String email = restaurant.getEmail();
+		long adminId = restaurant.getAdminId();
 		
 		try{
 			phone = pnUtil.parse(phoneNumber,"");
@@ -99,6 +113,8 @@ public class RestaurantServiceImpl implements RestaurantService{
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_PASSWORD_REQUIRED_ERROR);				
 		}  else if (email == null || email.equals("")){
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_EMAIL_ADDRESS_REQUIRED_ERROR);				
+		} else if (adminId == 0){
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_ADMIN_REQUIRED_ERROR);				
 		} else if(nameRestaurant != null ){
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_RESTAURANT_ALREADY_EXIST_ERROR);			
 		} else if(restaurantName.length() < 3 || restaurantName.length() > 15){
@@ -119,8 +135,10 @@ public class RestaurantServiceImpl implements RestaurantService{
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_EMAIL_FORMAT_ERROR);
 		} else if(emailRestaurant != null){
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_EMAIL_ALREADY_EXIST_ERROR);
-		} else if(admin == null || !admin.isStatus()){
+		} else if(admin == null){
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_NO_ADMIN_ERROR);
+		} else if (!admin.isStatus()){
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_UPDATE_ADMIN_ERROR);
 		} else if(valid){
 			restaurantDao.save(restaurant);
 			id =restaurant.getRestaurantId();
@@ -154,9 +172,12 @@ public class RestaurantServiceImpl implements RestaurantService{
 		int numberOfBranches = restaurant.getNumberOfBranches();
 		long adminId = restaurant.getAdminId();
 		
-		if(restaurantToUpdate == null || !restaurantToUpdate.isStatus()){
+		if(restaurantToUpdate == null){
 			valid = false;
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_DELETTING_MESSAGE);
+		} else if (!restaurantToUpdate.isStatus()){
+			valid = false;
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_UPDATE_RESTAURANT_ERROR);
 		}
 		
 		if (restaurantName != null && !restaurantName.equals("") && valid ){
@@ -170,7 +191,11 @@ public class RestaurantServiceImpl implements RestaurantService{
 				restaurantToUpdate.setRestaurantName(restaurantName);;
 				restaurantToUpdate.setUpdatedAt(new Date());
 				restaurantDao.save(restaurantToUpdate);
-				response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, restaurantToUpdate);
+				Restaurants jsonRestaurant = new Restaurants(restaurantToUpdate.getRestaurantId(), restaurantToUpdate.getRestaurantName(), restaurantToUpdate.getPhoneNumber(),
+						                                  restaurantToUpdate.getUserName(), restaurantToUpdate.getEmail(), restaurantToUpdate.getAdminId(),
+						                                  restaurantToUpdate.getNumberOfBranches(), restaurantToUpdate.getRate(), restaurantToUpdate.getWorkingHours(),
+						                                  restaurantToUpdate.getCreatedAt(), restaurantToUpdate.getUpdatedAt(), restaurantToUpdate.getDeletedAt(),restaurantToUpdate.isStatus());
+				response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, jsonRestaurant);
 				}		
 			}
 		
@@ -199,7 +224,11 @@ public class RestaurantServiceImpl implements RestaurantService{
 				restaurantToUpdate.setPhoneNumber(phoneNumber);
 				restaurantToUpdate.setUpdatedAt(new Date());
 				restaurantDao.save(restaurantToUpdate);
-				response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, restaurantToUpdate);
+				Restaurants jsonRestaurant = new Restaurants(restaurantToUpdate.getRestaurantId(), restaurantToUpdate.getRestaurantName(), restaurantToUpdate.getPhoneNumber(),
+                        restaurantToUpdate.getUserName(), restaurantToUpdate.getEmail(), restaurantToUpdate.getAdminId(),
+                        restaurantToUpdate.getNumberOfBranches(), restaurantToUpdate.getRate(), restaurantToUpdate.getWorkingHours(),
+                        restaurantToUpdate.getCreatedAt(), restaurantToUpdate.getUpdatedAt(), restaurantToUpdate.getDeletedAt(),restaurantToUpdate.isStatus());
+				response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, jsonRestaurant);
 			}	
 		}
 		
@@ -218,7 +247,11 @@ public class RestaurantServiceImpl implements RestaurantService{
 				restaurantToUpdate.setUserName(userName);
 				restaurantToUpdate.setUpdatedAt(new Date());
 				restaurantDao.save(restaurantToUpdate);
-				response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, restaurantToUpdate);
+				Restaurants jsonRestaurant = new Restaurants(restaurantToUpdate.getRestaurantId(), restaurantToUpdate.getRestaurantName(), restaurantToUpdate.getPhoneNumber(),
+                        restaurantToUpdate.getUserName(), restaurantToUpdate.getEmail(), restaurantToUpdate.getAdminId(),
+                        restaurantToUpdate.getNumberOfBranches(), restaurantToUpdate.getRate(), restaurantToUpdate.getWorkingHours(),
+                        restaurantToUpdate.getCreatedAt(), restaurantToUpdate.getUpdatedAt(), restaurantToUpdate.getDeletedAt(),restaurantToUpdate.isStatus());
+response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, jsonRestaurant);
 			}	
 			
 		}
@@ -234,7 +267,11 @@ public class RestaurantServiceImpl implements RestaurantService{
 				restaurantToUpdate.setPassword(password);
 				restaurantToUpdate.setUpdatedAt(new Date());
 				restaurantDao.save(restaurantToUpdate);
-				response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, restaurantToUpdate);	
+				Restaurants jsonRestaurant = new Restaurants(restaurantToUpdate.getRestaurantId(), restaurantToUpdate.getRestaurantName(), restaurantToUpdate.getPhoneNumber(),
+                        restaurantToUpdate.getUserName(), restaurantToUpdate.getEmail(), restaurantToUpdate.getAdminId(),
+                        restaurantToUpdate.getNumberOfBranches(), restaurantToUpdate.getRate(), restaurantToUpdate.getWorkingHours(),
+                        restaurantToUpdate.getCreatedAt(), restaurantToUpdate.getUpdatedAt(), restaurantToUpdate.getDeletedAt(),restaurantToUpdate.isStatus());
+				response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, jsonRestaurant);	
 			} 
 			
 		}
@@ -252,7 +289,11 @@ public class RestaurantServiceImpl implements RestaurantService{
 				restaurantToUpdate.setEmail(email);
 				restaurantToUpdate.setUpdatedAt(new Date());
 				restaurantDao.save(restaurantToUpdate);
-				response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, restaurantToUpdate);	
+				Restaurants jsonRestaurant = new Restaurants(restaurantToUpdate.getRestaurantId(), restaurantToUpdate.getRestaurantName(), restaurantToUpdate.getPhoneNumber(),
+                        restaurantToUpdate.getUserName(), restaurantToUpdate.getEmail(), restaurantToUpdate.getAdminId(),
+                        restaurantToUpdate.getNumberOfBranches(), restaurantToUpdate.getRate(), restaurantToUpdate.getWorkingHours(),
+                        restaurantToUpdate.getCreatedAt(), restaurantToUpdate.getUpdatedAt(), restaurantToUpdate.getDeletedAt(),restaurantToUpdate.isStatus());
+				response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, jsonRestaurant);	
 			}
 		}
 		
@@ -260,23 +301,56 @@ public class RestaurantServiceImpl implements RestaurantService{
 			restaurantToUpdate.setNumberOfBranches(numberOfBranches);
 			restaurantToUpdate.setUpdatedAt(new Date());
 			restaurantDao.save(restaurantToUpdate);
-			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, restaurantToUpdate);	
+			Restaurants jsonRestaurant = new Restaurants(restaurantToUpdate.getRestaurantId(), restaurantToUpdate.getRestaurantName(), restaurantToUpdate.getPhoneNumber(),
+                    restaurantToUpdate.getUserName(), restaurantToUpdate.getEmail(), restaurantToUpdate.getAdminId(),
+                    restaurantToUpdate.getNumberOfBranches(), restaurantToUpdate.getRate(), restaurantToUpdate.getWorkingHours(),
+                    restaurantToUpdate.getCreatedAt(), restaurantToUpdate.getUpdatedAt(), restaurantToUpdate.getDeletedAt(),restaurantToUpdate.isStatus());
+			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, jsonRestaurant);	
 		}
 		
 		if (rate != null && !rate.equals("") && valid ){
 			restaurantToUpdate.setRate(rate);
 			restaurantToUpdate.setUpdatedAt(new Date());
 			restaurantDao.save(restaurantToUpdate);
-			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, restaurantToUpdate);	
+			Restaurants jsonRestaurant = new Restaurants(restaurantToUpdate.getRestaurantId(), restaurantToUpdate.getRestaurantName(), restaurantToUpdate.getPhoneNumber(),
+                    restaurantToUpdate.getUserName(), restaurantToUpdate.getEmail(), restaurantToUpdate.getAdminId(),
+                    restaurantToUpdate.getNumberOfBranches(), restaurantToUpdate.getRate(), restaurantToUpdate.getWorkingHours(),
+                    restaurantToUpdate.getCreatedAt(), restaurantToUpdate.getUpdatedAt(), restaurantToUpdate.getDeletedAt(),restaurantToUpdate.isStatus());
+			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, jsonRestaurant);	
 		}
 		
 		if(workingHours != null && !workingHours.equals("") && valid){
 			restaurantToUpdate.setWorkingHours(workingHours);
 			restaurantToUpdate.setUpdatedAt(new Date());
 			restaurantDao.save(restaurantToUpdate);
-			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, restaurantToUpdate);	
+			Restaurants jsonRestaurant = new Restaurants(restaurantToUpdate.getRestaurantId(), restaurantToUpdate.getRestaurantName(), restaurantToUpdate.getPhoneNumber(),
+                    restaurantToUpdate.getUserName(), restaurantToUpdate.getEmail(), restaurantToUpdate.getAdminId(),
+                    restaurantToUpdate.getNumberOfBranches(), restaurantToUpdate.getRate(), restaurantToUpdate.getWorkingHours(),
+                    restaurantToUpdate.getCreatedAt(), restaurantToUpdate.getUpdatedAt(), restaurantToUpdate.getDeletedAt(),restaurantToUpdate.isStatus());
+			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, jsonRestaurant);	
 		}
 		
+		
+		if(adminId != 0 && valid){
+		Admin admin = adminDao.findByAdminId(adminId);
+		if(admin == null){
+			valid = false;
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_NO_ADMIN_ERROR);
+		} else if (!admin.isStatus()){
+			valid = false;
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_UPDATE_ADMIN_ERROR);
+		} else if (valid){
+			restaurantToUpdate.setAdminId(adminId);
+			restaurantToUpdate.setUpdatedAt(new Date());
+			restaurantDao.save(restaurantToUpdate);
+			Restaurants jsonRestaurant = new Restaurants(restaurantToUpdate.getRestaurantId(), restaurantToUpdate.getRestaurantName(), restaurantToUpdate.getPhoneNumber(),
+                    restaurantToUpdate.getUserName(), restaurantToUpdate.getEmail(), restaurantToUpdate.getAdminId(),
+                    restaurantToUpdate.getNumberOfBranches(), restaurantToUpdate.getRate(), restaurantToUpdate.getWorkingHours(),
+                    restaurantToUpdate.getCreatedAt(), restaurantToUpdate.getUpdatedAt(), restaurantToUpdate.getDeletedAt(),restaurantToUpdate.isStatus());
+			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, jsonRestaurant);
+		}
+		
+		}
 		return response;
 	}
 

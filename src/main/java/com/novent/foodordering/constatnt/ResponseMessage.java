@@ -55,6 +55,7 @@ public class ResponseMessage {
 	public final static String FAILED_EMAIL_ADDRESS_REQUIRED_ERROR = "Email Address is required field";
 	public final static String FAILED_PRIVILAGE_REQUIRED_ERROR = "Privilage is required field";
 	public final static String FAILED_ADMINISTRATORID_REQUIRED_ERROR = "Administrator Id is required field";
+	public final static String FAILED_ADMIN_REQUIRED_ERROR = "Admin Id is required field";
 	public final static String FAILED_AREANAME_REQUIRED_ERROR = "Area Name is required field";
 	public final static String FAILED_RESTAURANTNAME_REQUIRED_ERROR = "Restaurant Name is required field";
 	public final static String FAILED_BRANCHNAME_REQUIRED_ERROR = "Branch Name is required field";
@@ -64,6 +65,8 @@ public class ResponseMessage {
 	public final static String FAILED_UPDATE_ADMINISTRATOR_ERROR = "Administrator account is suspended";
 	public final static String FAILED_UPDATE_ADMIN_ERROR = "Admin account is suspended";
 	public final static String FAILED_UPDATE_AREA_ERROR = "Area is suspended";
+	public final static String FAILED_UPDATE_RESTAURANT_ERROR = "Restaurant is suspended";
+
 
 	
 
