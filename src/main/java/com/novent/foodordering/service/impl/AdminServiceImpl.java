@@ -1,6 +1,8 @@
 package com.novent.foodordering.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import com.novent.foodordering.entity.Admin;
 import com.novent.foodordering.entity.Admin.Privilege;
 import com.novent.foodordering.entity.Administrator;
 import com.novent.foodordering.service.AdminService;
+import com.novent.foodordering.util.Admins;
 import com.novent.foodordering.util.ResponseObject;
 import com.novent.foodordering.util.ResponseObjectAll;
 import com.novent.foodordering.util.ResponseObjectCrud;
@@ -36,8 +39,15 @@ public class AdminServiceImpl implements AdminService{
 	public ResponseObject getAdminByStatus(boolean status) {
 		ResponseObject response = null;
 		List<Admin> allAdmins = adminDao.findByStatus(status);
+		
 		if(!allAdmins.isEmpty()){
-			response = new ResponseObjectAll<Admin>(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_GETTING_MESSAGE, allAdmins);
+			List<Admins> jsonAdmins = new ArrayList<Admins>(); 
+			for (Iterator<Admin> iterator = allAdmins.iterator(); iterator.hasNext();){
+				Admin admin = iterator.next();
+				jsonAdmins.add(new Admins(admin.getAdminId(), admin.getPhoneNumber(), admin.getUserName(), admin.getFullName(), admin.getEmail(), 
+	                      admin.getAdministratorId(), admin.getPrivilege(), admin.getCreatedAt(), admin.getUpdatedAt(), admin.getDeletedAt(), admin.isStatus()));
+			}	
+			response = new ResponseObjectAll<Admins>(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_GETTING_MESSAGE, jsonAdmins);
 		} else {
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_GET_CODE, ResponseMessage.FAILED_GETTING_MESSAGE);
 		}
@@ -49,7 +59,9 @@ public class AdminServiceImpl implements AdminService{
 		ResponseObject response = null;
 		Admin admin = adminDao.findByAdminId(adminId);
 		if (admin != null){
-			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_GETTING_MESSAGE, admin);
+			Admins jsonAdmin = new Admins(admin.getAdminId(), admin.getPhoneNumber(), admin.getUserName(), admin.getFullName(), admin.getEmail(), 
+					                      admin.getAdministratorId(), admin.getPrivilege(), admin.getCreatedAt(), admin.getUpdatedAt(), admin.getDeletedAt(), admin.isStatus());
+			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_GETTING_MESSAGE, jsonAdmin);
 		} else {
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_GET_CODE, ResponseMessage.FAILED_GETTING_MESSAGE);
 		}
@@ -125,6 +137,8 @@ public class AdminServiceImpl implements AdminService{
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_EMAIL_ALREADY_EXIST_ERROR);
 		}  else if(administrator == null){
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_ADMINISTRATOR_NUMBER_ERROR);
+		}  else if(!administrator.isStatus()){
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_UPDATE_ADMINISTRATOR_ERROR);
 		}  else if(valid){
 			adminDao.save(admin);
 			List<Admin> admins = administrator.getAdmins();
@@ -156,10 +170,13 @@ public class AdminServiceImpl implements AdminService{
 		Privilege privilege = admin.getPrivilege();
 		long administratorId = admin.getAdministratorId();
 		
-		 if(adminToUpdate == null || !adminToUpdate.isStatus() ){
+		 if(adminToUpdate == null){
 			 valid = false;
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_DELETTING_MESSAGE);
-		} 
+		} else if (!adminToUpdate.isStatus()){
+			valid = false ;
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_UPDATE_USER_ERROR);
+		}
 		
 		
 		PhoneNumberUtil pnUtil = PhoneNumberUtil.getInstance();
@@ -186,7 +203,9 @@ public class AdminServiceImpl implements AdminService{
 			adminToUpdate.setPhoneNumber(phoneNumber);
 			adminToUpdate.setUpdatedAt(new Date());
 			adminDao.save(adminToUpdate);
-			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, adminToUpdate);
+			Admins jsonAdmin = new Admins(adminToUpdate.getAdminId(), adminToUpdate.getPhoneNumber(), adminToUpdate.getUserName(), adminToUpdate.getFullName(), adminToUpdate.getEmail(), 
+										  adminToUpdate.getAdministratorId(), adminToUpdate.getPrivilege(), adminToUpdate.getCreatedAt(), adminToUpdate.getUpdatedAt(), adminToUpdate.getDeletedAt(), adminToUpdate.isStatus());
+			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, jsonAdmin);
 			}	
 		}
 		
@@ -206,7 +225,9 @@ public class AdminServiceImpl implements AdminService{
 			adminToUpdate.setUserName(userName);
 			adminToUpdate.setUpdatedAt(new Date());
 			adminDao.save(adminToUpdate);
-			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, adminToUpdate);
+			Admins jsonAdmin = new Admins(adminToUpdate.getAdminId(), adminToUpdate.getPhoneNumber(), adminToUpdate.getUserName(), adminToUpdate.getFullName(), adminToUpdate.getEmail(), 
+					  adminToUpdate.getAdministratorId(), adminToUpdate.getPrivilege(), adminToUpdate.getCreatedAt(), adminToUpdate.getUpdatedAt(), adminToUpdate.getDeletedAt(), adminToUpdate.isStatus());
+response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, jsonAdmin);
 			}
 		}
 		
@@ -222,7 +243,9 @@ public class AdminServiceImpl implements AdminService{
 			adminToUpdate.setFullName(fullName);
 			adminToUpdate.setUpdatedAt(new Date());
 			adminDao.save(adminToUpdate);
-			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, adminToUpdate);
+			Admins jsonAdmin = new Admins(adminToUpdate.getAdminId(), adminToUpdate.getPhoneNumber(), adminToUpdate.getUserName(), adminToUpdate.getFullName(), adminToUpdate.getEmail(), 
+					  adminToUpdate.getAdministratorId(), adminToUpdate.getPrivilege(), adminToUpdate.getCreatedAt(), adminToUpdate.getUpdatedAt(), adminToUpdate.getDeletedAt(), adminToUpdate.isStatus());
+			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, jsonAdmin);
 			}
 		}
 		
@@ -237,7 +260,9 @@ public class AdminServiceImpl implements AdminService{
 				adminToUpdate.setPassword(password);
 				adminToUpdate.setUpdatedAt(new Date());
 				adminDao.save(adminToUpdate);
-				response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, adminToUpdate);	
+				Admins jsonAdmin = new Admins(adminToUpdate.getAdminId(), adminToUpdate.getPhoneNumber(), adminToUpdate.getUserName(), adminToUpdate.getFullName(), adminToUpdate.getEmail(), 
+						  adminToUpdate.getAdministratorId(), adminToUpdate.getPrivilege(), adminToUpdate.getCreatedAt(), adminToUpdate.getUpdatedAt(), adminToUpdate.getDeletedAt(), adminToUpdate.isStatus());
+				response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, jsonAdmin);	
 			} 
 		}
 		
@@ -255,7 +280,9 @@ public class AdminServiceImpl implements AdminService{
 				adminToUpdate.setEmail(email);
 				adminToUpdate.setUpdatedAt(new Date());
 				adminDao.save(adminToUpdate);
-				response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, adminToUpdate);	
+				Admins jsonAdmin = new Admins(adminToUpdate.getAdminId(), adminToUpdate.getPhoneNumber(), adminToUpdate.getUserName(), adminToUpdate.getFullName(), adminToUpdate.getEmail(), 
+						  adminToUpdate.getAdministratorId(), adminToUpdate.getPrivilege(), adminToUpdate.getCreatedAt(), adminToUpdate.getUpdatedAt(), adminToUpdate.getDeletedAt(), adminToUpdate.isStatus());
+				response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, jsonAdmin);	
 			}
 		}
 		
@@ -263,7 +290,9 @@ public class AdminServiceImpl implements AdminService{
 			adminToUpdate.setPrivilege(privilege);
 			adminToUpdate.setUpdatedAt(new Date());
 			adminDao.save(adminToUpdate);
-			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, adminToUpdate);	
+			Admins jsonAdmin = new Admins(adminToUpdate.getAdminId(), adminToUpdate.getPhoneNumber(), adminToUpdate.getUserName(), adminToUpdate.getFullName(), adminToUpdate.getEmail(), 
+					  adminToUpdate.getAdministratorId(), adminToUpdate.getPrivilege(), adminToUpdate.getCreatedAt(), adminToUpdate.getUpdatedAt(), adminToUpdate.getDeletedAt(), adminToUpdate.isStatus());
+			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, jsonAdmin);	
 		}
 		
 		
@@ -273,11 +302,15 @@ public class AdminServiceImpl implements AdminService{
 			if(administrator == null){
 				valid = false;
 				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_ADMINISTRATOR_NUMBER_ERROR);
+			} else if(!administrator.isStatus()){
+				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_UPDATE_ADMINISTRATOR_ERROR);
 			} else if(valid){
 				adminToUpdate.setAdministratorId(administratorId);
 				adminToUpdate.setUpdatedAt(new Date());
 				adminDao.save(adminToUpdate);
-				response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, adminToUpdate);	
+				Admins jsonAdmin = new Admins(adminToUpdate.getAdminId(), adminToUpdate.getPhoneNumber(), adminToUpdate.getUserName(), adminToUpdate.getFullName(), adminToUpdate.getEmail(), 
+						  adminToUpdate.getAdministratorId(), adminToUpdate.getPrivilege(), adminToUpdate.getCreatedAt(), adminToUpdate.getUpdatedAt(), adminToUpdate.getDeletedAt(), adminToUpdate.isStatus());
+				response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, jsonAdmin);	
 			
 			}
 		}
