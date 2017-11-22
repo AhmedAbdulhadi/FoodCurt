@@ -63,23 +63,34 @@ public class ItemServiceImpl  implements ItemService{
 		Restaurant restaurant = restaurantDao.findByRestaurantId(items.getRestaurantId());
 		
  		boolean valid = (restaurant != null && restaurant.isStatus())  && !items.getItems().isEmpty();
- 		
+ 		boolean validName = true;
+ 		boolean validPrice = true;
 		List<Item> item = items.getItems();
 		if (valid){
 			for (Iterator<Item> iterator = item.iterator(); iterator.hasNext();){
 				Item value = iterator.next();
 				if(value.getItemName() == null || value.getItemName().equals("")){
 					valid = false;
+					validName = false;
 				} else if (value.getPrice() == 0){
 					valid = false;
+					validPrice = false;
 				} else {
 					itemDao.save(value);
 				}
 			}
 		}
-		
-		if(restaurant == null || !restaurant.isStatus()){
+		if(items.getRestaurantId() == 0){
+			valid = false;
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_RESTAURANTID_REQUIRED_ERROR);
+		} else if(restaurant == null ){
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_NO_RESTAURANT_ERROR);
+		} else if (!restaurant.isStatus()){
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_UPDATE_RESTAURANT_ERROR);
+		} else if (!validName){
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_ITEMNAME_REQUIRED_ERROR);
+		} else if (!validPrice){
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_PRICE_REQUIRED_ERROR);
 		} else if(valid){
 			restaurant.setItems(item);
 			restaurantDao.save(restaurant);
@@ -101,10 +112,14 @@ public class ItemServiceImpl  implements ItemService{
 		
 		boolean valid = ((itemToUpdate != null && itemToUpdate.isStatus()) && item != null);
 		
-		if(itemToUpdate == null || !itemToUpdate.isStatus()){
+		if(itemToUpdate == null){
 			valid = false ;
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_NO_ITEM_ERROR);
-		} 
+		} else if (!itemToUpdate.isStatus()){
+			valid = false ;
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_UPDATE_ITEM_ERROR);
+		}
+		
 		if (itemName != null && !itemName.equals("") && valid){
 			itemToUpdate.setItemName(itemName);
 			itemToUpdate.setUpdatedAt(new Date());
