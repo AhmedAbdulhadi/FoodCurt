@@ -82,6 +82,14 @@ public class UserServiceImpl implements UserService{
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_ERROR);
 		}
 		
+		 if(phoneNumber != null && phoneNumber != "" && phoneNumber.charAt(0) == '+'){
+				phoneNumber = phoneNumber.replace("+","");
+			}
+		
+		 if(phoneNumber != null && phoneNumber != "" && phoneNumber.charAt(3) == '0'){
+				phoneNumber = phoneNumber.replace("0","");
+			}
+		
 		if (phoneNumber == null || phoneNumber.equals("")){
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_PHONENUMBER_REQUIRED_ERROR);				
 		} else if (userName == null || userName.equals("")){
@@ -111,6 +119,7 @@ public class UserServiceImpl implements UserService{
 		} else if (!email.matches(regex)) {
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_EMAIL_FORMAT_ERROR);
 		} else if(valid){
+			user.setPhoneNumber(phoneNumber);
 			userDao.save(user);
 			id =user.getUserId();
 			response = new ResponseObjectCrud(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_CREATE_CODE, ResponseMessage.SUCCESS_CREATING_MESSAGE, id);
@@ -152,6 +161,14 @@ public class UserServiceImpl implements UserService{
 			} catch (Exception e) {
 				valid = false ;
 				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_ERROR);
+			}
+			
+			if(phoneNumber != null && phoneNumber != "" && phoneNumber.charAt(0) == '+'){
+				phoneNumber = phoneNumber.replace("+","");
+			}
+		
+		    if(phoneNumber != null && phoneNumber != "" && phoneNumber.charAt(3) == '0'){
+				phoneNumber = phoneNumber.replace("0","");
 			}
 			
 			Users phoneNumberUser = userDao.findByPhoneNumber(user.getPhoneNumber());

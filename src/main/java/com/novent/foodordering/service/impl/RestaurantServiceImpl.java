@@ -105,6 +105,14 @@ public class RestaurantServiceImpl implements RestaurantService{
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_ERROR);
 		}
 		
+		if(phoneNumber != null && phoneNumber != "" && phoneNumber.charAt(0) == '+'){
+			phoneNumber = phoneNumber.replace("+","");
+		}
+	
+		if(phoneNumber != null && phoneNumber != "" && phoneNumber.charAt(3) == '0'){
+			phoneNumber = phoneNumber.replace("0","");
+		}
+		
 
 		if (restaurantName == null || restaurantName.equals("")){
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_RESTAURANTNAME_REQUIRED_ERROR);				
@@ -150,6 +158,7 @@ public class RestaurantServiceImpl implements RestaurantService{
 		} else if (!admin.isStatus()){
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_UPDATE_ADMIN_ERROR);
 		} else if(valid){
+			restaurant.setPhoneNumber(phoneNumber);
 			restaurantDao.save(restaurant);
 			id =restaurant.getRestaurantId();
 			List<Restaurant> restaurants = admin.getRestaurant();
@@ -240,6 +249,16 @@ public class RestaurantServiceImpl implements RestaurantService{
 				valid = false;
 				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_ERROR);
 			}
+			
+			if(phoneNumber != null && phoneNumber != "" && phoneNumber.charAt(0) == '+'){
+				phoneNumber = phoneNumber.replace("+","");
+			}
+		
+			if(phoneNumber != null && phoneNumber != "" && phoneNumber.charAt(3) == '0'){
+				phoneNumber = phoneNumber.replace("0","");
+			}
+		 
+			
 			if(phoneNumberRestaurant != null && !restaurantToUpdate.equals(phoneNumberRestaurant)){
 				valid = false;
 				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_PHONENUMBER_ALREADY_EXIST_ERROR);

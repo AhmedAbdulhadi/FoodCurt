@@ -101,6 +101,14 @@ public class AdminServiceImpl implements AdminService{
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_ERROR);
 		}
 		
+		if(phoneNumber != null && phoneNumber != "" && phoneNumber.charAt(0) == '+'){
+			phoneNumber = phoneNumber.replace("+","");
+		}
+	
+		if(phoneNumber != null && phoneNumber != "" && phoneNumber.charAt(3) == '0'){
+			phoneNumber = phoneNumber.replace("0","");
+		}
+		
 		boolean valid = (phoneNumberAdmin == null  && userNameAdmin == null && emailAdmin == null && administrator != null /*&& isValidNumber && isJONumber */) ;
 		
 		if (phoneNumber == null || phoneNumber.equals("")){
@@ -140,6 +148,7 @@ public class AdminServiceImpl implements AdminService{
 		}  else if(!administrator.isStatus()){
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_UPDATE_ADMINISTRATOR_ERROR);
 		}  else if(valid){
+			admin.setPhoneNumber(phoneNumber);
 			adminDao.save(admin);
 			List<Admin> admins = administrator.getAdmins();
 			admins.add(admin);
@@ -189,6 +198,15 @@ public class AdminServiceImpl implements AdminService{
 				valid = false;
 				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_ERROR);
 			}
+			
+			if(phoneNumber != null && phoneNumber != "" && phoneNumber.charAt(0) == '+'){
+				phoneNumber = phoneNumber.replace("+","");
+			}
+		
+			if(phoneNumber != null && phoneNumber != "" && phoneNumber.charAt(3) == '0'){
+				phoneNumber = phoneNumber.replace("0","");
+			}
+		 
 			Admin phoneNumberAdmin = adminDao.findByPhoneNumber(phoneNumber);
 			if(phoneNumberAdmin != null && !adminToUpdate.equals(phoneNumberAdmin)){
 				valid = false;

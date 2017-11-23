@@ -92,6 +92,14 @@ public class BranchServiceImpl implements BranchService{
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_ERROR);
 		}
 		
+		if(phoneNumber != null && phoneNumber != "" && phoneNumber.charAt(0) == '+'){
+			phoneNumber = phoneNumber.replace("+","");
+		}
+	
+		if(phoneNumber != null && phoneNumber != "" && phoneNumber.charAt(3) == '0'){
+			phoneNumber = phoneNumber.replace("0","");
+		}
+		
 		if (branchName == null || branchName.equals("")){
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_BRANCHNAME_REQUIRED_ERROR);				
 		} else if (branchNameAR == null || branchNameAR.equals("")){
@@ -122,6 +130,7 @@ public class BranchServiceImpl implements BranchService{
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_GET_CODE, ResponseMessage.FAILED_PHONENUMBER_ALREADY_EXIST_ERROR);
 		} else if(valid){
 			int numOfBranches = restaurant.getNumberOfBranches();
+			branch.setPhoneNumber(phoneNumber);
 			restaurant.setNumberOfBranches(++numOfBranches);
 			List<Branch> branches = restaurant.getBranches();
 			branches.add(branch);
@@ -179,6 +188,15 @@ public class BranchServiceImpl implements BranchService{
 				valid = false ;
 				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_ERROR);
 			}
+			
+			if(phoneNumber != null && phoneNumber != "" && phoneNumber.charAt(0) == '+'){
+				phoneNumber = phoneNumber.replace("+","");
+			}
+		
+			if(phoneNumber != null && phoneNumber != "" && phoneNumber.charAt(3) == '0'){
+				phoneNumber = phoneNumber.replace("0","");
+			}
+			
 			Branch branchPhoneNumber = branchDao.findByPhoneNumber(branch.getPhoneNumber());
 			if(branchPhoneNumber != null && !branchToUpdate.equals(branchPhoneNumber)){
 				valid = false;

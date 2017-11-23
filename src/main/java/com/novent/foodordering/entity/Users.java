@@ -14,6 +14,7 @@ import org.hibernate.validator.constraints.Email;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+
 @Entity
 public class Users implements Serializable{
 	
