@@ -7,6 +7,7 @@ public class Areas {
 	
 	private long areaId;
 	private String areaName;
+	private String areaNameAR;
 	private long administratorId;
 	private String address;
 	private double longittude;
@@ -18,9 +19,10 @@ public class Areas {
 	private Date deletedAt;
 	private boolean status;
 	
-	public Areas(long areaId, String areaName, long administratorId, String address, double longittude, double lattiude, Date createdAt, Date updatedAt, Date deletedAt, boolean status){
+	public Areas(long areaId, String areaName, String areaNameAR, long administratorId, String address, double longittude, double lattiude, Date createdAt, Date updatedAt, Date deletedAt, boolean status){
 		this.areaId = areaId;
 		this.areaName = areaName;
+		this.areaNameAR = areaNameAR;
 		this.administratorId = administratorId;
 		this.address = address;
 		this.longittude = longittude;
@@ -90,6 +92,14 @@ public class Areas {
 	}
 	public void setStatus(boolean status) {
 		this.status = status;
+	}
+
+	public String getAreaNameAR() {
+		return areaNameAR;
+	}
+
+	public void setAreaNameAR(String areaNameAR) {
+		this.areaNameAR = areaNameAR;
 	}
 
 }

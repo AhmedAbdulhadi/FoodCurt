@@ -21,6 +21,8 @@ public class Branch implements Serializable{
 	@NotNull
 	private String branchName;
 	@NotNull
+	private String branchNameAR;
+	@NotNull
 	@Column(unique=true)
 	private String phoneNumber;
 	private String rate;
@@ -115,5 +117,13 @@ public class Branch implements Serializable{
 	}
 	public void setIsOpen(boolean isOpen) {
 		this.isOpen = isOpen;
+	}
+
+	public String getBranchNameAR() {
+		return branchNameAR;
+	}
+
+	public void setBranchNameAR(String branchNameAR) {
+		this.branchNameAR = branchNameAR;
 	}
 }

@@ -25,6 +25,8 @@ public class Restaurant implements Serializable{
 	@NotNull
 	private String restaurantName;
 	@NotNull
+	private String restaurantNameAR;
+	@NotNull
 	@Column(unique=true)
 	private String phoneNumber;	
 	@NotNull
@@ -154,5 +156,13 @@ public class Restaurant implements Serializable{
 	}
 	public void setAdminId(long adminId) {
 		this.adminId = adminId;
+	}
+
+	public String getRestaurantNameAR() {
+		return restaurantNameAR;
+	}
+
+	public void setRestaurantNameAR(String restaurantNameAR) {
+		this.restaurantNameAR = restaurantNameAR;
 	}
 }

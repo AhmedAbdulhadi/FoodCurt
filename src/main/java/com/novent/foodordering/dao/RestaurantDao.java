@@ -18,6 +18,8 @@ public interface RestaurantDao extends CrudRepository<Restaurant, Long>{
 	
 	public Restaurant findByRestaurantName(String restaurantName);
 	
+	public Restaurant findByRestaurantNameAR(String restaurantNameAR);
+	
 	public Restaurant findByUserName(String userName);
 	
 	public Restaurant findByPhoneNumber (String phoneNumber);

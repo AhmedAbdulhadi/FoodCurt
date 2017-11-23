@@ -76,12 +76,13 @@ public class BranchServiceImpl implements BranchService{
 		PhoneNumberUtil pnUtil = PhoneNumberUtil.getInstance();
 		
 		String branchName = branch.getBranchName();
+		String branchNameAR = branch.getBranchNameAR();
 		String phoneNumber = branch.getPhoneNumber();
-//		String rate = branch.getRate();
-//		String workingHours = branch.getWorkingHours();
-//		boolean isOpen = branch.getIsOpen();
 		long restaurantId = branch.getRestaurantId();
 		long areaId = branch.getAreaId();
+		
+		String regex = "^[\u0621-\u064A]+$";
+
 		
 		try{
 			phone = pnUtil.parse(phoneNumber,"");
@@ -93,6 +94,8 @@ public class BranchServiceImpl implements BranchService{
 		
 		if (branchName == null || branchName.equals("")){
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_BRANCHNAME_REQUIRED_ERROR);				
+		} else if (branchNameAR == null || branchNameAR.equals("")){
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_BRANCHNAMEAR_REQUIRED_ERROR);				
 		} else if (phoneNumber == null || phoneNumber.equals("")){
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_PHONENUMBER_REQUIRED_ERROR);				
 		}  else if (areaId == 0){
@@ -109,6 +112,8 @@ public class BranchServiceImpl implements BranchService{
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_GET_CODE, ResponseMessage.FAILED_UPDATE_AREA_ERROR);
 		} else if(branchName.length() < 5 || branchName.length() > 15){
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_BRANCH_NAME_ERROR);			
+		} else if(!branchNameAR.matches(regex)){
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_ARABICNAME_ERROR);
 		} else if(phoneNumber != null && phoneNumber != "" && !isValidNumber && phoneNumber.substring(0, 2).equals("00")){
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_PREFIX_FORMAT_ERROR);			
 		} else if (!isJONumber || !isValidNumber){
@@ -147,6 +152,7 @@ public class BranchServiceImpl implements BranchService{
 		Branch branchToUpdate = branchDao.findByBranchId(branchId);
 		
 		String branchName = branch.getBranchName();
+		String branchNameAR = branch.getBranchNameAR();
 		String phoneNumber = branch.getPhoneNumber();
 		String rate = branch.getRate();
 		String workingHours = branch.getWorkingHours();
@@ -216,6 +222,21 @@ public class BranchServiceImpl implements BranchService{
 				response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, branchToUpdate);
 			}	
 	    }
+	    
+		String regex = "^[\u0621-\u064A]+$";
+	    
+	    if(branchNameAR != null && !branchNameAR.equals("") && valid ){
+	    	if(!branchNameAR.matches(regex)){
+	    		valid = false;
+				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_ARABICNAME_ERROR);			
+			} else if (valid){
+				branchToUpdate.setBranchNameAR(branchName);
+				branchToUpdate.setUpdatedAt(new Date());
+				branchDao.save(branchToUpdate);
+				response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, branchToUpdate);
+			}	
+	    }
+	    
 	    
 	    if (rate != null && !rate.equals("") && valid){
 	    	branchToUpdate.setRate(rate);

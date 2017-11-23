@@ -24,6 +24,9 @@ public class Area implements Serializable{
 	@Column(unique=true)
 	private String areaName;
 	@NotNull
+	@Column(unique=true)
+	private String areaNameAR;
+	@NotNull
 	private long administratorId;
 	private String address;
 	private double longittude;
@@ -109,5 +112,13 @@ public class Area implements Serializable{
 	}
 	public void setBranches(List<Branch> branches) {
 		this.branches = branches;
+	}
+
+	public String getAreaNameAR() {
+		return areaNameAR;
+	}
+
+	public void setAreaNameAR(String areaNameAR) {
+		this.areaNameAR = areaNameAR;
 	}
 }

@@ -28,6 +28,7 @@ public class ResponseMessage {
 	public final static String FAILED_NO_BRANCH_ERROR = "no branch found";
 	public final static String FAILED_NO_RESTAURANT_ERROR = "no Restaurant found";
 	public final static String FAILED_AREANAME_ALREADY_EXIST_ERROR = "Area Name already exist";
+	public final static String FAILED_AREANAMEAR_ALREADY_EXIST_ERROR = "Arabic Area Name already exist";
 	public final static String FAILED_EMAIL_ALREADY_EXIST_ERROR = "Email already exist";
 	public final static String FAILED_USERNAME_LENGTH_ERROR = "user Name length must be between 6 and 20";
 	public final static String FAILED_USERNAME_LENGTH_GREATER_ERROR = "user Name length must be greater than 6";
@@ -48,6 +49,7 @@ public class ResponseMessage {
 	public final static String FAILED_RESTAURANT_NAME_LESS_ERROR = "restaurant Name length must be less than 15";
 	public final static String FAILED_BRANCH_NAME_ERROR = "Branch Name length must be between 5 and 15";
 	public final static String FAILED_RESTAURANT_ALREADY_EXIST_ERROR = "Restaurant Name already exist";
+	public final static String FAILED_RESTAURANTAR_ALREADY_EXIST_ERROR = "Arabic Restaurant Name already exist";
 	public final static String FAILED_PHONENUMBER_REQUIRED_ERROR = "Phone number is required field";
 	public final static String FAILED_USERNAME_REQUIRED_ERROR = "UserName is required field";
 	public final static String FAILED_USERID_REQUIRED_ERROR = "UserId is required field";
@@ -58,10 +60,13 @@ public class ResponseMessage {
 	public final static String FAILED_ADMINISTRATORID_REQUIRED_ERROR = "Administrator Id is required field";
 	public final static String FAILED_ADMIN_REQUIRED_ERROR = "Admin Id is required field";
 	public final static String FAILED_AREANAME_REQUIRED_ERROR = "Area Name is required field";
+	public final static String FAILED_AREANAMEAR_REQUIRED_ERROR = "Arabic Area Name is required field";
 	public final static String FAILED_ITEMNAME_REQUIRED_ERROR = "Item Name is required field";
 	public final static String FAILED_PRICE_REQUIRED_ERROR = "Price is required field";
 	public final static String FAILED_RESTAURANTNAME_REQUIRED_ERROR = "Restaurant Name is required field";
+	public final static String FAILED_RESTAURANTNAMEAR_REQUIRED_ERROR = "Arabic Restaurant Name is required field";
 	public final static String FAILED_BRANCHNAME_REQUIRED_ERROR = "Branch Name is required field";
+	public final static String FAILED_BRANCHNAMEAR_REQUIRED_ERROR = "Arabic Branch Name is required field";
 	public final static String FAILED_BRANCHID_REQUIRED_ERROR = "Branch Id is required field";
 	public final static String FAILED_AREAID_REQUIRED_ERROR = "areaId is required field";
 	public final static String FAILED_RESTAURANTID_REQUIRED_ERROR = "restaurantId is required field";
@@ -74,4 +79,6 @@ public class ResponseMessage {
 	public final static String FAILED_UPDATE_ITEM_ERROR = "Item is suspended";
 	public final static String FAILED_UPDATE_BRANCH_ERROR = "Branch is suspended";
 	public final static String FAILED_NOORDER_ERROR = "Items is required field ";
+	public final static String FAILED_ARABICNAME_ERROR = "invalid Arabic Name";
+
 }

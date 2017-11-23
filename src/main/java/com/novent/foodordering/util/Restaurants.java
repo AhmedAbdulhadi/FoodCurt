@@ -7,6 +7,7 @@ public class Restaurants {
 
 	private long restaurantId;
 	private String restaurantName;
+	private String restaurantNameAR;
 	private String phoneNumber;	
 	private String userName;
 	private String email;
@@ -21,10 +22,11 @@ public class Restaurants {
 	private Date deletedAt;
 	private boolean status;
 	
-	public Restaurants(long restaurantId, String restaurantName, String phoneNumber, String userName, String email, long adminId, int numberOfBranches,
+	public Restaurants(long restaurantId, String restaurantName, String restaurantNameAR, String phoneNumber, String userName, String email, long adminId, int numberOfBranches,
 			           String rate,  String workingHours, Date createdAt, Date updatedAt, Date deletedAt, boolean status){
 		this.restaurantId = restaurantId;
 		this.restaurantName = restaurantName;
+		this.restaurantNameAR = restaurantNameAR;
 		this.phoneNumber = phoneNumber;
 		this.userName = userName;
 		this.email = email;
@@ -116,6 +118,16 @@ public class Restaurants {
 	}
 	public void setStatus(boolean status) {
 		this.status = status;
+	}
+
+
+	public String getRestaurantNameAR() {
+		return restaurantNameAR;
+	}
+
+
+	public void setRestaurantNameAR(String restaurantNameAR) {
+		this.restaurantNameAR = restaurantNameAR;
 	}
 
 }

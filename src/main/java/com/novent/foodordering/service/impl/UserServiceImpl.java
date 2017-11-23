@@ -142,7 +142,7 @@ public class UserServiceImpl implements UserService{
 			valid = false ;
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_UPDATE_USER_ERROR);
 		}
-//		@Pattern(regexp="(^$|[0-9]{10})")
+		
 		PhoneNumberUtil pnUtil = PhoneNumberUtil.getInstance();
 	    if (phoneNumber != null && phoneNumber != "" && valid){
 			try{

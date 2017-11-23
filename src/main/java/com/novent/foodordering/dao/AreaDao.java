@@ -18,4 +18,6 @@ public interface AreaDao extends CrudRepository<Area, Long>{
 	
 	public Area findByAreaName(String areaName);
 	
+	public Area findByAreaNameAR(String areaNameAR);
+	
 }
