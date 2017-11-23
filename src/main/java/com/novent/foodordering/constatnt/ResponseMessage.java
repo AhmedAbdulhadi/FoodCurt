@@ -74,26 +74,4 @@ public class ResponseMessage {
 	public final static String FAILED_UPDATE_ITEM_ERROR = "Item is suspended";
 	public final static String FAILED_UPDATE_BRANCH_ERROR = "Branch is suspended";
 	public final static String FAILED_NOORDER_ERROR = "Items is required field ";
-
-	
-
-
-
-
-	
-
-
-
-	
-
-
-
-
-
-	
-	
-
-
-	
-
 }

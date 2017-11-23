@@ -12,10 +12,12 @@ import com.novent.foodordering.constatnt.ResponseMessage;
 import com.novent.foodordering.constatnt.ResponseStatus;
 import com.novent.foodordering.dao.CartDao;
 import com.novent.foodordering.dao.ItemDao;
+import com.novent.foodordering.dao.OrderDao;
 import com.novent.foodordering.dao.OrderItemDao;
 import com.novent.foodordering.entity.Cart;
 import com.novent.foodordering.entity.Item;
 import com.novent.foodordering.entity.OrderItem;
+import com.novent.foodordering.entity.Orders;
 import com.novent.foodordering.service.CartService;
 import com.novent.foodordering.util.Carts;
 import com.novent.foodordering.util.ResponseObject;
@@ -31,6 +33,8 @@ public class CartServiceImpl implements CartService {
 	public OrderItemDao orderItemDao;
 	@Autowired
 	public ItemDao itemDao;
+	@Autowired
+	public OrderDao orderDao;
 
 
 	@Override
@@ -48,15 +52,14 @@ public class CartServiceImpl implements CartService {
 	@Override
 	public ResponseObject updateCart(long cartId, Carts carts) {
 		ResponseObject response = null;
-		System.out.println(carts);
 		Cart cartToUpdate = cartDao.findByCartId(cartId);
-		System.out.println(cartToUpdate);
 		List<OrderItem> items = carts.getItems();
-        System.out.println(items);
         
         boolean valid = true;
         boolean isItem = true;
         double totalPrice = 0;
+        int totalQuantity = 0;
+        
         
 		if(cartToUpdate != null && !items.isEmpty()){
 			for (Iterator<OrderItem> iterator = items.iterator(); iterator.hasNext();){
@@ -73,6 +76,7 @@ public class CartServiceImpl implements CartService {
 				int quantity =value.getQuantity();
 				double price = item.getPrice();
 				totalPrice +=(quantity*price);
+				totalQuantity += quantity;
 				} else {
 				valid = false;
 				isItem = false;
@@ -82,8 +86,15 @@ public class CartServiceImpl implements CartService {
 		if (!isItem) {
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_NO_ITEM_ERROR);
 		} else if (valid) {
+			cartToUpdate.setTotalQuantity(totalQuantity);
 			cartToUpdate.setOrderItem(items);
 			cartDao.save(cartToUpdate);
+//			long cartId = cartToUpdate.getCartId();
+			Orders order = orderDao.findByCart(cartToUpdate);
+			order.setAmount(totalPrice);
+			double afterTax = totalPrice + (totalPrice * order.getTax());
+			order.setTotalamount(Double.valueOf(String.format("%,.2f", afterTax)));
+			orderDao.save(order);
 			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_UPDATING_MESSAGE, cartToUpdate );
 		} else {
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_GET_CODE, ResponseMessage.FAILED_GETTING_MESSAGE);

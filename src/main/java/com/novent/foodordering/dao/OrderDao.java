@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import com.novent.foodordering.entity.Cart;
 import com.novent.foodordering.entity.Orders;
 
 
@@ -16,6 +17,8 @@ public interface OrderDao extends CrudRepository<Orders, Long>{
 	 public Orders findByOrderId(long orderId);
 
    	 public List<Orders> findByStatusName (String statusName);
+   	 
+   	 public Orders findByCart(Cart cart);
    	 
    	 
 }

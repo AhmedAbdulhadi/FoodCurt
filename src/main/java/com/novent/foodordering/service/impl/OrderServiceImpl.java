@@ -1,5 +1,6 @@
 package com.novent.foodordering.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -17,6 +18,7 @@ import com.novent.foodordering.dao.ItemDao;
 import com.novent.foodordering.dao.OrderDao;
 import com.novent.foodordering.dao.OrderItemDao;
 import com.novent.foodordering.dao.UserDao;
+import com.novent.foodordering.entity.Administrator;
 import com.novent.foodordering.entity.Branch;
 import com.novent.foodordering.entity.Cart;
 import com.novent.foodordering.entity.Item;
@@ -24,6 +26,9 @@ import com.novent.foodordering.entity.OrderItem;
 import com.novent.foodordering.entity.Orders;
 import com.novent.foodordering.entity.Users;
 import com.novent.foodordering.service.OrderService;
+import com.novent.foodordering.util.Administrators;
+import com.novent.foodordering.util.JsonOrder;
+import com.novent.foodordering.util.JsonUser;
 import com.novent.foodordering.util.Order;
 import com.novent.foodordering.util.ResponseObject;
 import com.novent.foodordering.util.ResponseObjectAll;
@@ -53,7 +58,16 @@ public class OrderServiceImpl implements OrderService{
 		ResponseObject response = null;
 		List<Orders> allOrders = orderDao.findAll();
 		if(!allOrders.isEmpty()){
-			response = new ResponseObjectAll<>(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_GETTING_MESSAGE, allOrders);
+			List<JsonOrder> jsonOrder = new ArrayList<JsonOrder>(); 
+			for (Iterator<Orders> iterator = allOrders.iterator(); iterator.hasNext();){
+				Orders order = iterator.next();
+				Users user = userDao.findByUserId(order.getUserId());
+				JsonUser jsonUser = new JsonUser(user.getUserId(), user.getPhoneNumber(), user.getPhoneNumber());
+				jsonOrder.add(new JsonOrder(order.getOrderId(), order.getTakeAway(), order.getNumberOfChair(), order.getTotalamount(), order.getAmount(),
+                        order.getTax(), order.getBranchId(), order.getCreatedAt(), order.getUpdatedAt(), order.getDeletedAt(), order.getStatus(),
+                        order.getStatusName(), order.getCart(), jsonUser));
+			}
+			response = new ResponseObjectAll<>(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_GETTING_MESSAGE, jsonOrder);
 		} else {
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_GET_CODE, ResponseMessage.FAILED_GETTING_MESSAGE);
 		}
@@ -67,8 +81,11 @@ public class OrderServiceImpl implements OrderService{
 		Users user = userDao.findByUserId(order.getUserId());
 		
 		if (order != null && user != null){
-//		if(order != null){
-			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_GETTING_MESSAGE, order );
+			JsonUser jsonUser = new JsonUser(user.getUserId(), user.getPhoneNumber(), user.getPhoneNumber());
+			JsonOrder jsonOder = new JsonOrder(order.getOrderId(), order.getTakeAway(), order.getNumberOfChair(), order.getTotalamount(), order.getAmount(),
+					                           order.getTax(), order.getBranchId(), order.getCreatedAt(), order.getUpdatedAt(), order.getDeletedAt(), order.getStatus(),
+					                           order.getStatusName(), order.getCart(), jsonUser);
+			response = new ResponseObjectData(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_GETTING_MESSAGE, jsonOder );
 		} else {
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_GET_CODE, ResponseMessage.FAILED_GETTING_MESSAGE);
 		}
@@ -93,6 +110,8 @@ public class OrderServiceImpl implements OrderService{
 		List<OrderItem> items = order.getItems();
  		boolean validQuen = true;
  		boolean validItem = true;
+ 		int totalQuantity = 0;
+ 		
  		
 		boolean valid = order != null && user != null && branch != null && userId != 0 && branchId != 0 ;
 		if(items != null){
@@ -113,6 +132,7 @@ public class OrderServiceImpl implements OrderService{
 					int quantity =value.getQuantity();
 					double price = item.getPrice();
 					totalPrice +=(quantity*price);
+					totalQuantity += quantity;
 						} else {
 							validItem=false;
 							valid = false;
@@ -153,6 +173,7 @@ public class OrderServiceImpl implements OrderService{
 		} else if (valid) {
 			Cart cart = new Cart();
 			Orders newOrder = new Orders();
+			cart.setTotalQuantity(totalQuantity);
 			cart.setOrderItem(items);
 			cartDao.save(cart);
 			
@@ -160,14 +181,14 @@ public class OrderServiceImpl implements OrderService{
 			newOrder.setCart(cart);
 			newOrder.setNumberOfChair(numberOfChair);
 			newOrder.setTakeAway(takeAway);
-			newOrder.setTotalamount(totalPrice);
+			newOrder.setAmount(totalPrice);
+			double afterTax = totalPrice + (totalPrice * newOrder.getTax());
+			newOrder.setTotalamount(Double.valueOf(String.format("%,.2f", afterTax)));
 			newOrder.setUser(user);
 			newOrder.setUserId(userId);
 			orderDao.save(newOrder);
 			id = newOrder.getOrderId();
 			response = new ResponseObjectCrud(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_CREATE_CODE,	ResponseMessage.SUCCESS_CREATING_MESSAGE, id);
-//		} else {
-//			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_CREATING_MESSAGE);
 		} 
 		return response;
 	}
@@ -181,7 +202,7 @@ public class OrderServiceImpl implements OrderService{
 		Orders orderToUpdate = orderDao.findByOrderId(orderId);
 		List<OrderItem> items = order.getItems();
 		
-		boolean valid = order != null /*&& branch != null*/ && orderToUpdate != null;
+		boolean valid = order != null && orderToUpdate != null;
 
 	     int numberOfChair = order.getNumberOfChair();
 	     boolean takeAway = order.getTakeAway();
@@ -218,7 +239,6 @@ public class OrderServiceImpl implements OrderService{
 			cart.setOrderItem(items);
 			cartDao.save(cart);
 			
-			orderToUpdate.setTotalamount(totalPrice);
 			orderToUpdate.setNumberOfChair(numberOfChair);
 			orderToUpdate.setTakeAway(takeAway);
 			orderToUpdate.setUpdatedAt(new Date());

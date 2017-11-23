@@ -20,6 +20,8 @@ public class Cart implements Serializable{
 	private long cartId;
 	@OneToMany
 	List<OrderItem> orderItem;
+	@NotNull 
+	private int totalQuantity;
 	
 	
 	public long getCartId() {
@@ -33,6 +35,12 @@ public class Cart implements Serializable{
 	}
 	public void setOrderItem(List<OrderItem> orderItem) {
 		this.orderItem = orderItem;
+	}
+	public int getTotalQuantity() {
+		return totalQuantity;
+	}
+	public void setTotalQuantity(int totalQuantity) {
+		this.totalQuantity = totalQuantity;
 	}
 
 }

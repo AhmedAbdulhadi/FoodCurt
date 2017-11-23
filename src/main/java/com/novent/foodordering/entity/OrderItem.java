@@ -7,6 +7,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Entity
 public class OrderItem implements Serializable{
 
@@ -26,10 +29,11 @@ public class OrderItem implements Serializable{
 	private int quantity;
 	private String comment;
 	
-	
+	@JsonIgnore
 	public long getOrdreItemId() {
 		return ordreItemId;
 	}
+	@JsonProperty
 	public void setOrdreItemId(long ordreItemId) {
 		this.ordreItemId = ordreItemId;
 	}

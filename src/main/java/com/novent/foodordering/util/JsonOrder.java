@@ -1,54 +1,57 @@
-package com.novent.foodordering.entity;
+package com.novent.foodordering.util;
 
-import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.validation.constraints.NotNull;
+import com.novent.foodordering.entity.Cart;
 
-@Entity
-public class Orders implements Serializable{
-
-	private static final long serialVersionUID = 1L;
+public class JsonOrder {
 	
-	@Id
-	@GeneratedValue
-	@NotNull
 	private long orderId;
-	@NotNull
 	private boolean takeAway;
 	private int numberOfChair;
 	private double totalamount;
 	private double amount;
 	private double tax = 0.08;
 	private long branchId;
-	private long userId;
-	//
 	private Date createdAt;
 	private Date updatedAt;
 	private Date deletedAt;
 	private int status;
 	private String statusName;
 	
-	//Relations
-	@OneToOne
 	private Cart cart;
-	@OneToOne
-	private Users user;
+	private JsonUser user;
 	
-	public Orders(){
-		setCreatedAt(new Date());
-		setStatus(1);
-		setStatusName(0);
+	public JsonOrder(long orderId, boolean takeAway, int numberOfChair, double totalamount, double amount, double tax, long branchId, Date createdAt, Date updatedAt, 
+			         Date deletedAt, int status, String statusName, Cart cart, JsonUser user){
+		this.orderId = orderId;
+		this.takeAway = takeAway;
+		this.numberOfChair = numberOfChair;
+		this.totalamount = totalamount;
+		this.amount = amount;
+		this.tax = tax;
+		this.branchId = branchId;
+		this.createdAt = createdAt;
+		this.updatedAt = updatedAt;
+		this.deletedAt = deletedAt;
+		this.status = status;
+		this.statusName = statusName;
+		this.cart = cart;
+		this.user = user;
 	}
+	
+	
 	public long getOrderId() {
 		return orderId;
 	}
 	public void setOrderId(long orderId) {
 		this.orderId = orderId;
+	}
+	public boolean isTakeAway() {
+		return takeAway;
+	}
+	public void setTakeAway(boolean takeAway) {
+		this.takeAway = takeAway;
 	}
 	public int getNumberOfChair() {
 		return numberOfChair;
@@ -56,17 +59,29 @@ public class Orders implements Serializable{
 	public void setNumberOfChair(int numberOfChair) {
 		this.numberOfChair = numberOfChair;
 	}
-	public boolean getTakeAway() {
-		return takeAway;
-	}
-	public void setTakeAway(boolean takeAway) {
-		this.takeAway = takeAway;
-	}
 	public double getTotalamount() {
 		return totalamount;
 	}
 	public void setTotalamount(double totalamount) {
 		this.totalamount = totalamount;
+	}
+	public double getAmount() {
+		return amount;
+	}
+	public void setAmount(double amount) {
+		this.amount = amount;
+	}
+	public double getTax() {
+		return tax;
+	}
+	public void setTax(double tax) {
+		this.tax = tax;
+	}
+	public long getBranchId() {
+		return branchId;
+	}
+	public void setBranchId(long branchId) {
+		this.branchId = branchId;
 	}
 	public Date getCreatedAt() {
 		return createdAt;
@@ -95,14 +110,8 @@ public class Orders implements Serializable{
 	public String getStatusName() {
 		return statusName;
 	}
-	public void setStatusName(int status) {
-		switch (status) {
-		case 0 : statusName = "New order";break;
-		case 1 : statusName = "Under cooking";break;
-		case 2 : statusName = "finished";break;
-		case 3 : statusName = "canceled";break;
-		
-		}
+	public void setStatusName(String statusName) {
+		this.statusName = statusName;
 	}
 	public Cart getCart() {
 		return cart;
@@ -110,34 +119,12 @@ public class Orders implements Serializable{
 	public void setCart(Cart cart) {
 		this.cart = cart;
 	}
-	public long getBranchId() {
-		return branchId;
-	}
-	public void setBranchId(long branchId) {
-		this.branchId = branchId;
-	}
-	public long getUserId() {
-		return userId;
-	}
-	public void setUserId(long userId) {
-		this.userId = userId;
-	}
-	public Users getUser() {
+	public JsonUser getUser() {
 		return user;
 	}
-	public void setUser(Users user) {
+	public void setUser(JsonUser user) {
 		this.user = user;
 	}
-	public double getAmount() {
-		return amount;
-	}
-	public void setAmount(double amount) {
-		this.amount = amount;
-	}
-	public double getTax() {
-		return tax;
-	}
-	public void setTax(double tax) {
-		this.tax = tax;
-	}
+
+
 }
