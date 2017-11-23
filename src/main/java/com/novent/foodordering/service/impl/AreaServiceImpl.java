@@ -72,7 +72,7 @@ public class AreaServiceImpl implements AreaService{
 		Administrator administrator = administratorDao.findByAdministratorId(area.getAdministratorId());
 		
 		boolean valid = (areaName == null && administrator != null) ;
-		String regex = "^[\u0621-\u064A]+$";
+		String regex = "^[\u0621-\u064A0-9 ]+$";
 		if(area.getAreaName()== null || area.getAreaName().equals("") ){
 			valid = false ;
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_AREANAME_REQUIRED_ERROR);
@@ -120,6 +120,7 @@ public class AreaServiceImpl implements AreaService{
 		double lattiude = area.getLattiude();
 		long administratorId = area.getAdministratorId();
 		
+		
 		if(areaToUpdate == null){
 			valid = false;
 			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_DELETTING_MESSAGE);
@@ -143,11 +144,15 @@ public class AreaServiceImpl implements AreaService{
 			}
 		}
 		
+		String regex = "^[\u0621-\u064A0-9 ]+$";
+
 		if (areaNameAR != null && !areaNameAR.equals("") && valid){
 			Area areaName = areaDao.findByAreaNameAR(area.getAreaNameAR());
 			if(areaName != null && !areaToUpdate.equals(areaName) ){
 				valid = false;
 				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_AREANAMEAR_ALREADY_EXIST_ERROR);
+			} else if (!area.getAreaNameAR().matches(regex)){
+				response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_RESPONSE_CODE, ResponseMessage.FAILED_ARABICNAME_ERROR);
 			} else if (valid){
 				areaToUpdate.setAreaNameAR(Name);
 				areaToUpdate.setUpdatedAt(new Date());

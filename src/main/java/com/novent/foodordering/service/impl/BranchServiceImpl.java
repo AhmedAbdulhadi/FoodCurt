@@ -81,7 +81,7 @@ public class BranchServiceImpl implements BranchService{
 		long restaurantId = branch.getRestaurantId();
 		long areaId = branch.getAreaId();
 		
-		String regex = "^[\u0621-\u064A]+$";
+		String regex = "^[\u0621-\u064A0-9 ]+$";
 
 		
 		try{
@@ -223,7 +223,7 @@ public class BranchServiceImpl implements BranchService{
 			}	
 	    }
 	    
-		String regex = "^[\u0621-\u064A]+$";
+		String regex = "^[\u0621-\u064A0-9 ]+$";
 	    
 	    if(branchNameAR != null && !branchNameAR.equals("") && valid ){
 	    	if(!branchNameAR.matches(regex)){

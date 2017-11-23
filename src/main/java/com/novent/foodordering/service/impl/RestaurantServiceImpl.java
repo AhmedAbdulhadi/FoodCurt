@@ -87,7 +87,7 @@ public class RestaurantServiceImpl implements RestaurantService{
 		
 		PhoneNumberUtil pnUtil = PhoneNumberUtil.getInstance();
 		String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$"; 
-		String regexAR = "^[\u0621-\u064A]+$";
+		String regexAR = "^[\u0621-\u064A0-9 ]+$";
 
 		String restaurantName = restaurant.getRestaurantName();
 		String restaurantNameAR = restaurant.getRestaurantNameAR();
@@ -210,7 +210,7 @@ public class RestaurantServiceImpl implements RestaurantService{
 				}		
 			}
 		
-		String regexAR = "^[\u0621-\u064A]+$";
+		String regexAR = "^[\u0621-\u064A0-9 ]+$";
 
 		if (restaurantNameAR != null && !restaurantNameAR.equals("") && valid ){
 			if(restaurantNameAR.matches(regexAR) ){
