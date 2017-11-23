@@ -14,10 +14,13 @@ public interface BranchDao extends CrudRepository<Branch, Long>{
 	
 	public List<Branch> findByStatus(boolean status);
 	
+	public List<Branch> findByRestaurantId(long restaurantId);
+	
 	public Branch findByBranchId(long branchId);
 	
 	public Branch findByAreaId(long areaId);
 	
 	public Branch findByPhoneNumber(String phoneNumber);
+	
 
 }

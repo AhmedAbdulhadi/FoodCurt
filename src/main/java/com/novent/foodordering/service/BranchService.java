@@ -12,6 +12,8 @@ public interface BranchService {
 	
 	public ResponseObject getBranchById(long branchId);
 	
+	public ResponseObject getBranchByRestaurantId(long restaurantId);
+	
 	public ResponseObject createBranch(Branch branch);
 	
 	public ResponseObject updateBranch(long branchId, Branch branch);

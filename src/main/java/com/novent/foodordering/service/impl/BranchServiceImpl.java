@@ -288,4 +288,16 @@ public class BranchServiceImpl implements BranchService{
 		return response;
 	}
 
+	@Override
+	public ResponseObject getBranchByRestaurantId(long restaurantId) {
+		ResponseObject response = null;
+		List<Branch> Branchs = branchDao.findByRestaurantId(restaurantId);
+		if(!Branchs.isEmpty()){
+			response = new ResponseObjectAll<Branch>(ResponseStatus.SUCCESS_RESPONSE_STATUS, ResponseCode.SUCCESS_RESPONSE_CODE, ResponseMessage.SUCCESS_GETTING_MESSAGE, Branchs);
+		} else {
+			response = new ResponseObject(ResponseStatus.FAILED_RESPONSE_STATUS, ResponseCode.FAILED_GET_CODE, ResponseMessage.FAILED_GETTING_MESSAGE);
+		}
+		return response;
+	}
+
 }

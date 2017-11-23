@@ -33,6 +33,11 @@ public class BranchController {
 	public ResponseObject getBranchById(@PathVariable long branchId) {
 		return branchService.getBranchById(branchId);
 	}
+	
+	@RequestMapping(method = RequestMethod.GET, params = "resturant_id")
+	public ResponseObject getBranchByRestaurantId(@RequestParam(value = "resturant_id") long restaurantId) {
+		return branchService.getBranchByRestaurantId(restaurantId);
+	}
 
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseObject createBranch(@RequestBody Branch branch) {
