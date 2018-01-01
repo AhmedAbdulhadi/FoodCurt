@@ -1,25 +1,23 @@
 package com.novent.foodordering;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 
-import com.novent.foodordering.demo.DemoApplicationTests;
 
 @SpringBootApplication
 public class DemoApplication extends SpringBootServletInitializer{
 
-	// for JAR
-	public static void main(String[] args) {
-		SpringApplication.run(DemoApplicationTests.class, args);
-	}
-	
 //	// for JAR
-//		public static void main(String[] args) {
-//			SpringApplication.run(DemoApplication.class, args);
-//		}
+//	public static void main(String[] args) {
+//		SpringApplication.run(DemoApplicationTests.class, args);
+//	}
+	
+	// for JAR
+		public static void main(String[] args) {
+			SpringApplication.run(DemoApplication.class, args);
+		}
 
 	// for WAR
 	@Override
