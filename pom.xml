@@ -8,7 +8,7 @@
     <version>1.0</version>
     <packaging>war</packaging>
 
-    <name>foodcurtordering</name>
+    <name>food_curt</name>
     <description>foodCurt project for Spring Boot</description>
 
     <parent>
