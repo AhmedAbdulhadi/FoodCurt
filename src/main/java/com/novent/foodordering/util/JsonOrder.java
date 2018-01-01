@@ -20,10 +20,10 @@ public class JsonOrder {
 	private String statusName;
 	
 	private Cart cart;
-	private JsonUser user;
+	private CustomUser user;
 	
 	public JsonOrder(long orderId, boolean takeAway, int numberOfChair, double totalamount, double amount, double tax, long branchId, Date createdAt, Date updatedAt, 
-			         Date deletedAt, int status, String statusName, Cart cart, JsonUser user){
+			         Date deletedAt, int status, String statusName, Cart cart, CustomUser user){
 		this.orderId = orderId;
 		this.takeAway = takeAway;
 		this.numberOfChair = numberOfChair;
@@ -119,10 +119,10 @@ public class JsonOrder {
 	public void setCart(Cart cart) {
 		this.cart = cart;
 	}
-	public JsonUser getUser() {
+	public CustomUser getUser() {
 		return user;
 	}
-	public void setUser(JsonUser user) {
+	public void setUser(CustomUser user) {
 		this.user = user;
 	}
 

@@ -25,7 +25,7 @@ public class Orders implements Serializable{
 	private double amount;
 	private double tax = 0.08;
 	private long branchId;
-	private long userId;
+//	private long userId;
 	//
 	private Date createdAt;
 	private Date updatedAt;
@@ -116,12 +116,6 @@ public class Orders implements Serializable{
 	public void setBranchId(long branchId) {
 		this.branchId = branchId;
 	}
-	public long getUserId() {
-		return userId;
-	}
-	public void setUserId(long userId) {
-		this.userId = userId;
-	}
 	public Users getUser() {
 		return user;
 	}
@@ -140,4 +134,10 @@ public class Orders implements Serializable{
 	public void setTax(double tax) {
 		this.tax = tax;
 	}
+//	public long getUserId() {
+//		return userId;
+//	}
+//	public void setUserId(long userId) {
+//		this.userId = userId;
+//	}
 }

@@ -2,16 +2,16 @@ package com.novent.foodordering.util;
 
 import java.util.Date;
 
-import com.novent.foodordering.entity.Administrator.Privilege;
+import com.novent.foodordering.entity.Admin.Privilege;
 
-
-public class Administrators {
+public class CustomAdmins {
 	
-	private long administratorId;
+	private long adminId;
 	private String phoneNumber;
 	private String userName;
 	private String fullName;
 	private String email;
+	private long administratorId;
 	private Privilege privilege;
 	
 	//
@@ -20,13 +20,14 @@ public class Administrators {
 	private Date deletedAt;
 	private boolean status;
 	
-	public Administrators(long administratorId, String phoneNumber, String userName, String fullName, String email, Privilege privilege, Date createdAt, Date updatedAt,
-			             Date deletedAt,boolean status){
-		this.administratorId = administratorId;
+	public CustomAdmins (long adminId, String phoneNumber, String userName, String fullName, String email, long administratorId,Privilege privilege,
+			        Date createdAt, Date updatedAt, Date deletedAt, boolean status){
+		this.adminId = adminId;
 		this.phoneNumber = phoneNumber;
 		this.userName = userName;
 		this.fullName = fullName;
 		this.email = email;
+		this.administratorId = administratorId;
 		this.privilege = privilege;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
@@ -34,12 +35,11 @@ public class Administrators {
 		this.status = status;
 	}
 	
-	
-	public long getAdministratorId() {
-		return administratorId;
+	public long getAdminId() {
+		return adminId;
 	}
-	public void setAdministratorId(long administratorId) {
-		this.administratorId = administratorId;
+	public void setAdminId(long adminId) {
+		this.adminId = adminId;
 	}
 	public String getPhoneNumber() {
 		return phoneNumber;
@@ -64,6 +64,12 @@ public class Administrators {
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	public long getAdministratorId() {
+		return administratorId;
+	}
+	public void setAdministratorId(long administratorId) {
+		this.administratorId = administratorId;
 	}
 	public Privilege getPrivilege() {
 		return privilege;

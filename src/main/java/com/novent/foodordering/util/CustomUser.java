@@ -1,12 +1,12 @@
 package com.novent.foodordering.util;
 
-public class JsonUser {
+public class CustomUser {
 	
 	private long userId;
 	private String phoneNumber;
 	private String fullName;
 	
-	public JsonUser (long userId, String phoneNumber, String fullName){
+	public CustomUser (long userId, String phoneNumber, String fullName){
 		this.userId = userId;
 		this.phoneNumber = phoneNumber;
 		this.fullName = fullName;

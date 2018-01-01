@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.novent.foodordering.entity.Item;
 
-public class Items {
+public class CustomItems {
 
 	private long restaurantId;
 	private List<Item> items;

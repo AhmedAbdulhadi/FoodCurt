@@ -3,7 +3,7 @@ package com.novent.foodordering.util;
 import java.util.Date;
 
 
-public class Areas {
+public class CustomAreas {
 	
 	private long areaId;
 	private String areaName;
@@ -19,7 +19,7 @@ public class Areas {
 	private Date deletedAt;
 	private boolean status;
 	
-	public Areas(long areaId, String areaName, String areaNameAR, long administratorId, String address, double longittude, double lattiude, Date createdAt, Date updatedAt, Date deletedAt, boolean status){
+	public CustomAreas(long areaId, String areaName, String areaNameAR, long administratorId, String address, double longittude, double lattiude, Date createdAt, Date updatedAt, Date deletedAt, boolean status){
 		this.areaId = areaId;
 		this.areaName = areaName;
 		this.areaNameAR = areaNameAR;

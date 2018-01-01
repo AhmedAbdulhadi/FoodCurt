@@ -3,7 +3,7 @@ package com.novent.foodordering.util;
 import java.util.Date;
 
 
-public class Restaurants {
+public class CustomRestaurants {
 
 	private long restaurantId;
 	private String restaurantName;
@@ -22,7 +22,7 @@ public class Restaurants {
 	private Date deletedAt;
 	private boolean status;
 	
-	public Restaurants(long restaurantId, String restaurantName, String restaurantNameAR, String phoneNumber, String userName, String email, long adminId, int numberOfBranches,
+	public CustomRestaurants(long restaurantId, String restaurantName, String restaurantNameAR, String phoneNumber, String userName, String email, long adminId, int numberOfBranches,
 			           String rate,  String workingHours, Date createdAt, Date updatedAt, Date deletedAt, boolean status){
 		this.restaurantId = restaurantId;
 		this.restaurantName = restaurantName;

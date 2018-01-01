@@ -10,6 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 public class Area implements Serializable{
@@ -107,9 +109,11 @@ public class Area implements Serializable{
 	public void setAdministratorId(long administratorId) {
 		this.administratorId = administratorId;
 	}
+	@JsonIgnore
 	public List<Branch> getBranches() {
 		return branches;
 	}
+	@JsonProperty
 	public void setBranches(List<Branch> branches) {
 		this.branches = branches;
 	}

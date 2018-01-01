@@ -18,6 +18,9 @@ public class ResponseMessage {
 	public final static String SUCCESS_PATCHING_MESSAGE = "Changed";
 	public final static String SUCCESS_DELETTING_MESSAGE = "Deleted";
 	public final static String SUCCESS_LOGIN_MESSAGE = "logged on successfully";
+	public final static String FAILED_AUTHENTICATION_MESSAGE = "You are not Authenticate";
+	public final static String FAILED_AUTHORIZATION_MESSAGE = "You are not Authorize";
+
 	//new added
 	public final static String FAILED_PHONENUMBER_ALREADY_EXIST_ERROR = "phone number already exist";
 	public final static String FAILED_USERNAME_ALREADY_EXIST_ERROR = "userName already exist";
@@ -55,6 +58,7 @@ public class ResponseMessage {
 	public final static String FAILED_USERID_REQUIRED_ERROR = "UserId is required field";
 	public final static String FAILED_FULLNAME_REQUIRED_ERROR = "FullName is required field";
 	public final static String FAILED_PASSWORD_REQUIRED_ERROR = "Password is required field";
+	public final static String FAILED_AR_REQUIRED_ERROR = "Arabic Name is required field";
 	public final static String FAILED_EMAIL_ADDRESS_REQUIRED_ERROR = "Email Address is required field";
 	public final static String FAILED_PRIVILAGE_REQUIRED_ERROR = "Privilage is required field";
 	public final static String FAILED_ADMINISTRATORID_REQUIRED_ERROR = "Administrator Id is required field";
@@ -80,5 +84,12 @@ public class ResponseMessage {
 	public final static String FAILED_UPDATE_BRANCH_ERROR = "Branch is suspended";
 	public final static String FAILED_NOORDER_ERROR = "Items is required field ";
 	public final static String FAILED_ARABICNAME_ERROR = "invalid Arabic Name";
+	public final static String FAILED_PASSWORD_ERROR = "Incorrect password";
+	public final static String FAILED_USER_ALREADY_LOGGEDIN_ERROR = "User already logged In";
+	public final static String SUCCESS_LOGGEDOUT = "success logged out";
+	public final static String FAILED_NOTLOGGEDIN = "user already logged out";
+	public final static String FAILED_INCORRECT_CREDENTIALS_ERROR = "incorrect credentials";
+	public final static String FAILED_INCORRECT_TOKEN_ERROR = "incorrect token";
+	public final static String FAILED_SESSION_TIMEOUT_ERROR = "Session TimeOut";
 
 }

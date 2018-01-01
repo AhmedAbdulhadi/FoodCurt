@@ -1,44 +1,19 @@
 package com.novent.foodordering.entity;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.Email;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
-public class Admin implements Serializable{
+public class Admin extends Users implements Serializable{
 
-private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 	
-	@Id
-	@GeneratedValue
-	@NotNull
-	private long adminId;
-	@NotNull
-	@Column(unique=true)
-	private String phoneNumber;
-	@NotNull
-	@Column(unique=true)
-	private String userName;
-	@NotNull
-	private String fullName;
-	@NotNull
-	private String password;
-	@NotNull
-	@Column(unique=true)
-	@Email(message = "Enter valid Email Address")
-	private String email;
 	@NotNull
 	private long administratorId;
 	public enum Privilege {
@@ -47,81 +22,14 @@ private static final long serialVersionUID = 1L;
 	private Privilege privilege;
 	
 	//
-	private Date createdAt;
-	private Date updatedAt;
-	private Date deletedAt;
-	private boolean status;
-	
-	//
 	@OneToMany
 	private List<Restaurant> restaurant;
-	
-	public Admin(){
-		setCreatedAt(new Date());
-		setStatus(true);
+
+	public long getAdministratorId() {
+		return administratorId;
 	}
-	
-	public long getAdminId() {
-		return adminId;
-	}
-	public void setAdminId(long adminId) {
-		this.adminId = adminId;
-	}
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
-	public String getUserName() {
-		return userName;
-	}
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-	public String getFullName() {
-		return fullName;
-	}
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
-	@JsonIgnore
-	public String getPassword() {
-		return password;
-	}
-	@JsonProperty
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	public Date getCreatedAt() {
-		return createdAt;
-	}
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
-	}
-	public Date getUpdatedAt() {
-		return updatedAt;
-	}
-	public void setUpdatedAt(Date updatedAt) {
-		this.updatedAt = updatedAt;
-	}
-	public Date getDeletedAt() {
-		return deletedAt;
-	}
-	public void setDeletedAt(Date deletedAt) {
-		this.deletedAt = deletedAt;
-	}
-	public boolean isStatus() {
-		return status;
-	}
-	public void setStatus(boolean status) {
-		this.status = status;
-	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
+	public void setAdministratorId(long administratorId) {
+		this.administratorId = administratorId;
 	}
 	public Privilege getPrivilege() {
 		return privilege;
@@ -129,16 +37,12 @@ private static final long serialVersionUID = 1L;
 	public void setPrivilege(Privilege privilege) {
 		this.privilege = privilege;
 	}
+	@JsonIgnore
 	public List<Restaurant> getRestaurant() {
 		return restaurant;
 	}
+	@JsonProperty
 	public void setRestaurant(List<Restaurant> restaurant) {
 		this.restaurant = restaurant;
-	}
-	public long getAdministratorId() {
-		return administratorId;
-	}
-	public void setAdministratorId(long administratorId) {
-		this.administratorId = administratorId;
-	}
+	}	
 }

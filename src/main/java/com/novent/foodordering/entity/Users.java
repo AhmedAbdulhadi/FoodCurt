@@ -1,67 +1,63 @@
 package com.novent.foodordering.entity;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Email;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-
 @Entity
-public class Users implements Serializable{
-	
-	private static final long serialVersionUID = 1L;
+@Table(name="Users")
+@Inheritance(strategy=InheritanceType.JOINED)
+public class Users {
 	
 	@Id
-	@GeneratedValue
-	@NotNull
-	private long userId;
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private long id;
 	@NotNull
 	@Column(unique=true)
 	private String phoneNumber;
 	@NotNull
 	@Column(unique=true)
 	private String userName;
-	@NotNull
 	private String fullName;
-	@NotNull
-	private String password;
 	@NotNull
 	@Column(unique=true)
 	@Email(message = "Enter valid Email Address")
 	private String email;
-	
+	@NotNull
+	private String password;
+	@NotNull
+	private boolean isLoggedIn;
+	@NotNull
+	private int role;
 	
 	//
 	private Date createdAt;
-	private Date updatedAt;
+	private Date UpdatedAt;
 	private Date deletedAt;
 	private boolean status;
-
+	
 	
 	public Users(){
 		setCreatedAt(new Date());
 		setStatus(true);
 	}
 	
-	public Users(String userName, String phoneNumber){
-		this.userName = userName;
-		this.phoneNumber = phoneNumber;
-		
+	
+	public long getId() {
+		return id;
 	}
-	public long getUserId() {
-		return userId;
-	}
-	public void setUserId(long userId) {
-		this.userId = userId;
+	public void setId(long id) {
+		this.id = id;
 	}
 	public String getPhoneNumber() {
 		return phoneNumber;
@@ -81,13 +77,29 @@ public class Users implements Serializable{
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
 	}
-	@JsonIgnore
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
 	public String getPassword() {
 		return password;
 	}
-	@JsonProperty
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	public void setIsLoggedIn(boolean isLoggedIn){
+		this.isLoggedIn = isLoggedIn;
+	}
+	public boolean getIsLoggedIn(){
+		return isLoggedIn;
+	}
+	public int getRole() {
+		return role;
+	}
+	public void setRole(int role) {
+		this.role = role;
 	}
 	public Date getCreatedAt() {
 		return createdAt;
@@ -96,10 +108,10 @@ public class Users implements Serializable{
 		this.createdAt = createdAt;
 	}
 	public Date getUpdatedAt() {
-		return updatedAt;
+		return UpdatedAt;
 	}
 	public void setUpdatedAt(Date updatedAt) {
-		this.updatedAt = updatedAt;
+		UpdatedAt = updatedAt;
 	}
 	public Date getDeletedAt() {
 		return deletedAt;
@@ -112,11 +124,5 @@ public class Users implements Serializable{
 	}
 	public void setStatus(boolean status) {
 		this.status = status;
-	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
+	} 
 }

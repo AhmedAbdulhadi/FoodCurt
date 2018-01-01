@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.novent.foodordering.entity.OrderItem;
 
-public class Order {
+public class CustomOrder {
 	private long userId;
 	private long branchId;
 	private int numberOfChair;

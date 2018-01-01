@@ -2,18 +2,27 @@ package com.novent.foodordering.dao;
 
 import java.util.List;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import com.novent.foodordering.entity.Users;
 
 
 @Repository
-public interface UserDao extends CrudRepository<Users, Long>{
+//public interface UserDao extends CrudRepository<Users, Long> {
+	public interface UserDao extends PagingAndSortingRepository<Users, Long> {
+	
+	public List<Users> findAllByOrderByIdAsc();
+	
+	public List<Users> findAllByOrderByIdDesc();
 		
-	public List<Users> findByStatus(boolean status);
+	public Page<Users> findByStatusOrderByIdAsc(boolean status, Pageable pageable);
 
-	public Users findByUserId(long userId);
+	public Page<Users> findByStatusOrderByIdDesc(boolean status, Pageable pageable);
+	
+	public Users findById(long id);
 	
 	public Users findByUserName(String userName);
 	

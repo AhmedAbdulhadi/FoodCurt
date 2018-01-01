@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.novent.foodordering.entity.OrderItem;
 
-public class Carts {
+public class CustomCarts {
 	private List<OrderItem> items ;
 
 	public List<OrderItem> getItems() {
