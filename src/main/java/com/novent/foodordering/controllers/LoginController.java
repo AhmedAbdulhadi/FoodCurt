@@ -25,6 +25,11 @@ public class LoginController {
 	public ResponseObject login(@RequestBody Login login, HttpServletRequest request) {
 		return loginService.login(login, request);
 	}
+	
+	@RequestMapping(method = RequestMethod.GET, value="/login/login")
+	public String login() {
+		return "welcome";
+	}
 //	
 //	@RequestMapping(method = RequestMethod.POST, value="/admin/login")
 //	public ResponseObject adminLogin(@RequestBody Login login) {
