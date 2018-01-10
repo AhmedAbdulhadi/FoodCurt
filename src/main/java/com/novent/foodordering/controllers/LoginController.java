@@ -28,7 +28,7 @@ public class LoginController {
 	
 	@RequestMapping(method = RequestMethod.GET, value="/login/login")
 	public String login() {
-		return "welcome to food cart login page";
+		return "welcome to food cart login controller";
 	}
 //	
 //	@RequestMapping(method = RequestMethod.POST, value="/admin/login")
