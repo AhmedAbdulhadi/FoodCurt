@@ -19,6 +19,7 @@ public class DemoApplication extends SpringBootServletInitializer{
 	// for JAR
 		public static void main(String[] args) {
 			System.out.println("Demo app appli.prop");
+			LOGGER.info("Demo app appli.prop");
 			System.out.println(System.getenv("database"));
 			LOGGER.info(System.getenv("database"));
 			System.out.println(System.getenv("username"));
