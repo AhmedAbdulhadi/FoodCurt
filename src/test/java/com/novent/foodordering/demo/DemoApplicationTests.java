@@ -12,7 +12,7 @@ import com.novent.foodordering.DemoApplication;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class DemoApplicationTests {
-	private static final Logger LOGGER = LoggerFactory.getLogger(DemoApplication.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DemoApplicationTests.class);
 //	System.out.println("Demo app appli.prop");
 //	LOGGER.info("Demo app appli.prop");
 //	System.out.println(System.getenv("database"));
